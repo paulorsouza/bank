@@ -25,7 +25,7 @@ defmodule Bank.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(user_params)
       assert user.email == user_params.email
       assert user.encrypted_password == user_params.encrypted_password
-      assert user.role == 0
+      assert user.role == :user
     end
 
     test "returns error changeset with invalid data " do
@@ -40,7 +40,7 @@ defmodule Bank.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_admin(user_params)
       assert user.email == user_params.email
       assert user.encrypted_password == user_params.encrypted_password
-      assert user.role == 10
+      assert user.role == :admin
     end
 
     test "returns error changeset with invalid data " do

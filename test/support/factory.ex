@@ -10,7 +10,7 @@ defmodule Bank.Factory do
     %User{
       email: sequence(:email, &"email-#{&1}@example.com"),
       encrypted_password: "12345678",
-      role: 0
+      role: :user
     }
   end
 end

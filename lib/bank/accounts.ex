@@ -38,7 +38,7 @@ defmodule Bank.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.create_user_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.insert()
   end
 

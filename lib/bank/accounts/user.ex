@@ -8,7 +8,7 @@ defmodule Bank.Accounts.User do
   schema "users" do
     field :email, :string
     field :encrypted_password, :string
-    field :role, :integer
+    field :role, UserRoles, default: :user
 
     timestamps()
   end
@@ -21,15 +21,9 @@ defmodule Bank.Accounts.User do
     |> unique_constraint(:email)
   end
 
-  def create_user_changeset(user, attrs) do
-    user
-    |> changeset(attrs)
-    |> put_change(:role, 0)
-  end
-
   def create_admin_changeset(user, attrs) do
     user
     |> changeset(attrs)
-    |> put_change(:role, 10)
+    |> put_change(:role, :admin)
   end
 end
