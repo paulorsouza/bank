@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/elixir:1.8.1-node-browsers
+        environment:
+          DATABASE_URL: postgresql://postgres@localhost
+          MIX_ENV: test
+      - image: circleci/postgres:11.2-alpine
+        environment:
+          POSTGRES_USER: postgres
+    steps:
+      - checkout
+
+      # --- Backend ----
+      # Save elixir version details
+      - run: echo "${ELIXIR_VERSION}" > ELIXIR_VERSION.lock
+      - run: echo "${OTP_VERSION}" > OTP_VERSION.lock
+      - run: echo "${SECRET_CONFIG}" | base64 --decode > config/test.secret.exs
+
+      # Hex and rebar
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+
+      # Restore dependencies
+      - restore_cache:
+          key: bank-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+
+      # Get dependencies
+      - run: mix deps.get
+      - run: mix deps.compile
+
+      # Store dependencies
+      - save_cache:
+          key: bank-mix-compile-{{ checksum "OTP_VERSION.lock" }}-{{ checksum "ELIXIR_VERSION.lock" }}-{{ checksum "mix.lock" }}
+          paths:
+            - _build
+            - deps
+
+      # --- Frontend ----
+      # Restore frontend
+      - restore_cache:
+          key: bank-npm-install-{{ checksum "assets/package.json" }}
+
+      # Compile frontend
+      - run:
+          command: npm install
+          working_directory: "assets"
+
+      # Store frontend
+      - save_cache:
+          key: bank-npm-install-{{ checksum "assets/package.json" }}
+          paths:
+            - assets/node_modules
+
+      # Compile application
+      - run: mix compile
+
+      # Check format
+      - run: mix format --check-formatted
+
+      # Create database
+      - run: mix ecto.create
+      - run: mix ecto.migrate
+
+      # Run test
+      - run: mix test
