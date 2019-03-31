@@ -43,7 +43,11 @@ defmodule Bank.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:ecto_enum, "~> 1.2"},
+      {:comeonin, "~> 5.1.1"},
+      {:pbkdf2_elixir, "~> 1.0.1"},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.3.0", only: :test}
     ]
   end
 

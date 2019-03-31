@@ -56,9 +56,6 @@ jobs:
       # Compile application
       - run: mix compile
 
-      # Check format
-      - run: mix format --check-formatted
-
       # Create database
       - run: mix ecto.create
       - run: mix ecto.migrate

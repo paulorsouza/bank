@@ -16,6 +16,7 @@ defmodule BankWeb.Router do
   scope "/", BankWeb do
     pipe_through :browser
 
+    resources "/users", UserController, only: [:new, :create]
     get "/", PageController, :index
   end
 
