@@ -13,7 +13,7 @@ defmodule BankWeb.UserController do
     case Accounts.create_user(user_params) do
       {:ok, _user} ->
         conn
-        |> put_flash(:success, "User created successfully.")
+        |> put_flash(:info, "User created successfully.")
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->

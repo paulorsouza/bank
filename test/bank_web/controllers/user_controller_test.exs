@@ -17,7 +17,7 @@ defmodule BankWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
-      assert get_flash(conn, :success) == "User created successfully."
+      assert get_flash(conn, :info) == "User created successfully."
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

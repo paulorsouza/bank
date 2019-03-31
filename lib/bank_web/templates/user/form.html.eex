@@ -9,12 +9,12 @@
   <%= text_input f, :email %>
   <%= error_tag f, :email %>
 
-  <%= label f, :pass %>
-  <%= text_input f, :pass %>
+  <%= label f, "Password" %>
+  <%= password_input f, :pass %>
   <%= error_tag f, :pass %>
 
-  <%= label f, :pass_confirmation %>
-  <%= text_input f, :pass_confirmation %>
+  <%= label f, "Confirm Password" %>
+  <%= password_input f, :pass_confirmation %>
   <%= error_tag f, :pass_confirmation %>
 
   <div>

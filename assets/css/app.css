@@ -1,3 +1,8 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+.bank-logo {
+  color: rgba(0,0,0,.9);
+  font-size: 1.3em;
+}
