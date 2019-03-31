@@ -6,3 +6,12 @@
   color: rgba(0,0,0,.9);
   font-size: 1.3em;
 }
+
+.nav-items {
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+.nav-items a {
+  padding-right: 8px;
+}

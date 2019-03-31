@@ -7,6 +7,7 @@ defmodule BankWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug BankWeb.Auth.Plug.CurrentUser
   end
 
   pipeline :api do
@@ -17,7 +18,14 @@ defmodule BankWeb.Router do
     pipe_through :browser
 
     resources "/users", UserController, only: [:new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete]
     get "/", PageController, :index
+  end
+
+  scope "/authenticated", BankWeb do
+    pipe_through [:browser, :ensure_authentication]
+
+    resources "/users", UserController, only: [:new, :create]
   end
 
   # Other scopes may use custom stacks.

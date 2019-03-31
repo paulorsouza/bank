@@ -6,7 +6,7 @@ defmodule BankWeb.UserControllerTest do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
 
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 200) =~ "Registration"
     end
   end
 
@@ -25,7 +25,7 @@ defmodule BankWeb.UserControllerTest do
 
       conn = post(conn, Routes.user_path(conn, :create), user: invalid_attrs)
 
-      assert html_response(conn, 200) =~ "New User"
+      assert html_response(conn, 200) =~ "Registration"
     end
   end
 end

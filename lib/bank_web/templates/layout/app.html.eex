@@ -11,9 +11,19 @@
     <header>
       <section class="container">
         <nav role="navigation">
-          <ul>
-            <li><%= link "Register", to: Routes.user_path(@conn, :new) %></li>
-          </ul>
+          <span class="nav-items">
+            <%= if @current_user do %>
+              <%= link "Log out",
+                  to: Routes.session_path(@conn, :delete, @current_user),
+                  method: "delete" %>
+            <% else %>
+              <%= link "Register", to: Routes.user_path(@conn, :new) %>
+              <%= link "Login", to: Routes.session_path(@conn, :new) %>
+            <% end %>
+
+
+
+          </span>
         </nav>
         <%= link "PRS Bank", to: Routes.page_path(@conn, :index), class: "bank-logo" %>
       </section>

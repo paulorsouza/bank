@@ -1,0 +1,5 @@
+<section class="phx-hero">
+  <h1><%= gettext "Welcome to %{name}!", name: "PRS Bank" %></h1>
+
+  <img src="<%= Routes.static_url(@conn, "/images/elixir.svg") %>" alt="Stone S2 Elixir"/>
+</section>
