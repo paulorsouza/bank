@@ -1,75 +1,39 @@
 defmodule Bank.Accounts do
-  @moduledoc """
-  The Accounts context.
-  """
+  @moduledoc false
 
   import Ecto.Query, warn: false
-  alias Bank.Repo
 
+  alias Bank.Repo
   alias Bank.Accounts.User
 
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(valid_uuid)
-      %User{}
-
-      iex> get_user!(invalid_uuid)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_user!(id), do: Repo.get!(User, id)
 
-  @doc """
-  Creates a user.
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+  end
 
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Creates admin user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_admin(attrs \\ %{}) do
     %User{}
     |> User.create_admin_changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  # runs the hash function, but always returns false
+  def valid_password?(nil, _given_password) do
+    Pbkdf2.no_user_verify()
+  end
+
+  def valid_password?(user, given_password) do
+    Pbkdf2.verify_pass(given_password, user.encrypted_password)
   end
 end

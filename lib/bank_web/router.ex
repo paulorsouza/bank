@@ -17,6 +17,7 @@ defmodule BankWeb.Router do
     pipe_through :browser
 
     resources "/users", UserController, only: [:new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete]
     get "/", PageController, :index
   end
 
