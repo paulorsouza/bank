@@ -9,9 +9,13 @@
   <%= text_input f, :email %>
   <%= error_tag f, :email %>
 
-  <%= label f, :encrypted_password %>
-  <%= text_input f, :encrypted_password %>
-  <%= error_tag f, :encrypted_password %>
+  <%= label f, :pass %>
+  <%= text_input f, :pass %>
+  <%= error_tag f, :pass %>
+
+  <%= label f, :pass_confirmation %>
+  <%= text_input f, :pass_confirmation %>
+  <%= error_tag f, :pass_confirmation %>
 
   <div>
     <%= submit "Save" %>

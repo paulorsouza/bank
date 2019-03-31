@@ -9,6 +9,8 @@ defmodule Bank.Factory do
   def user_factory do
     %User{
       email: sequence(:email, &"email-#{&1}@example.com"),
+      pass: "12345678",
+      pass_confirmation: "12345678",
       encrypted_password: "12345678",
       role: :user
     }
