@@ -73,3 +73,5 @@ config :bank, Bank.Repo,
   database: "bank_dev",
   hostname: "localhost",
   pool_size: 10
+
+import_config "test.secret.exs"
