@@ -16,5 +16,3 @@ config :bank, Bank.Repo,
   database: "bank_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
-
-import_config "test.secret.exs"

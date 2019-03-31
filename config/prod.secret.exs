@@ -1,12 +1,5 @@
 use Mix.Config
 
-# Configure your database
-config :bank, Bank.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "bank_prod",
-  pool_size: 15
-
 # In this file, we keep production configuration that
 # you likely want to automate and keep it away from
 # your version control system.
