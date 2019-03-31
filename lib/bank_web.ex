@@ -50,6 +50,7 @@ defmodule BankWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import BankWeb.Auth.Plug.CurrentUser, only: [ensure_authentication: 2]
     end
   end
 

@@ -10,7 +10,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
   import Plug.Conn
   import Phoenix.Controller, only: [put_flash: 3, redirect: 2]
 
-  alias Bank.Router.Helpers, as: Routes
+  alias BankWeb.Router.Helpers, as: Routes
   alias Bank.Accounts
 
   def init(opts), do: opts
@@ -23,7 +23,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
     user_id = get_session(conn, :user_id)
 
     cond do
-      user = conn.assigns[:current_user] ->
+      conn.assigns[:current_user] ->
         conn
 
       user = user_id && Accounts.get_user(user_id) ->
@@ -34,7 +34,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
     end
   end
 
-  def authenticate_user(conn, _otps \\ []) do
+  def ensure_authentication(conn, _otps) do
     if conn.assigns.current_user do
       conn
     else
@@ -45,5 +45,3 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
     end
   end
 end
-
-# def get_user(id), do: Repo.get(User, id)
