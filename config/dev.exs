@@ -74,7 +74,6 @@ config :bank, Bank.Repo,
   hostname: "localhost",
   pool_size: 10
 
-
 config :eventstore, EventStore.Storage,
   serializer: Commanded.Serialization.JsonSerializer,
   username: "postgres",

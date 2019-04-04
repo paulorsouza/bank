@@ -12,20 +12,12 @@ defmodule BankWeb.UserControllerTest do
 
   describe "create user" do
     test "redirects to show when data is valid", %{conn: conn} do
-      user_attrs = params_for(:user)
+      user_attrs = build(:user)
 
-      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
+      conn = post(conn, Routes.user_path(conn, :create), user_attrs)
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       assert get_flash(conn, :info) == "User created successfully."
-    end
-
-    test "renders errors when data is invalid", %{conn: conn} do
-      invalid_attrs = %{email: nil, encrypted_password: nil, role: nil}
-
-      conn = post(conn, Routes.user_path(conn, :create), user: invalid_attrs)
-
-      assert html_response(conn, 200) =~ "Registration"
     end
   end
 end

@@ -11,9 +11,11 @@ defmodule Bank.Application do
       # Start the Ecto repository
       Bank.Repo,
       # Start the endpoint when the application starts
-      BankWeb.Endpoint
-      # Starts a worker by calling: Bank.Worker.start_link(arg)
-      # {Bank.Worker, arg},
+      BankWeb.Endpoint,
+      # Projectors
+      Bank.Credentials.Supervisor
+
+      # Worker
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

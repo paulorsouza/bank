@@ -25,10 +25,8 @@ config :playfair, BankWeb.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
-config :eventstore, BankWeb.Repo,
-  config :eventstore, EventStore.Storage,
+config :eventstore, EventStore.Storage,
   serializer: Commanded.Serialization.JsonSerializer,
   url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
-

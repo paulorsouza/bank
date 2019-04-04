@@ -11,7 +11,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
   import Phoenix.Controller, only: [put_flash: 3, redirect: 2]
 
   alias BankWeb.Router.Helpers, as: Routes
-  alias Bank.Accounts
+  alias Bank.Credentials
 
   def init(opts), do: opts
 
@@ -26,7 +26,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
       conn.assigns[:current_user] ->
         conn
 
-      user = user_id && Accounts.get_user(user_id) ->
+      user = user_id && Credentials.get_user(user_id) ->
         assign(conn, :current_user, user)
 
       true ->

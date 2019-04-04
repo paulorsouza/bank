@@ -14,7 +14,7 @@ defmodule BankWeb.AuthTest do
   end
 
   test "login puts the user in the session", %{conn: conn} do
-    user = insert(:user)
+    user = insert(:user_projection)
 
     login_conn =
       conn
@@ -47,14 +47,14 @@ defmodule BankWeb.AuthTest do
     test "ensure_authentication continues when the current_user exists", %{conn: conn} do
       conn =
         conn
-        |> assign(:current_user, %Bank.Accounts.User{})
+        |> assign(:current_user, %Bank.Credentials.Projections.User{})
         |> CurrentUser.ensure_authentication([])
 
       refute conn.halted
     end
 
     test "call places user from session into assigns", %{conn: conn} do
-      user = insert(:user)
+      user = insert(:user_projection)
 
       conn =
         conn

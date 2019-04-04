@@ -48,6 +48,8 @@ defmodule Bank.MixProject do
       {:ex_machina, "~> 2.3", only: :test},
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
+      {:uuid, "~> 1.1"},
+      {:exconstructor, "~> 1.1"},
       {:commanded, "~> 0.18"},
       {:commanded_ecto_projections, "~> 0.8"},
       {:commanded_eventstore_adapter, "~> 0.5", runtime: Mix.env() != :test},

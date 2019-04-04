@@ -3,16 +3,28 @@ defmodule Bank.Factory do
 
   use ExMachina.Ecto, repo: Bank.Repo
 
-  alias Bank.Accounts.User
+  alias Bank.Credentials.Projections.User
+  alias Bank.Credentials.Commands.CreateUser
 
-  @spec user_factory() :: Bank.Accounts.User.t()
   def user_factory do
-    %User{
+    %{
+      username: sequence(:user, &"user=#{&1}"),
       email: sequence(:email, &"email-#{&1}@example.com"),
-      pass: "12345678",
-      pass_confirmation: "12345678",
-      encrypted_password: "12345678",
-      role: :user
+      password: "12345678",
+      password_confirmation: "12345678"
     }
+  end
+
+  def user_projection_factory do
+    %User{
+      id: UUID.uuid4(),
+      username: sequence(:user, &"user=#{&1}"),
+      email: sequence(:email, &"email-#{&1}@example.com"),
+      encrypted_password: "12345678"
+    }
+  end
+
+  def create_user_factory do
+    struct(CreateUser, build(:user))
   end
 end
