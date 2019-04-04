@@ -13,6 +13,12 @@ config :logger, level: :warn
 config :bank, Bank.Repo,
   username: "postgres",
   password: "postgres",
-  database: "bank_test",
+  database: "bank_readstore_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :commanded,
+  event_store_adapter: Commanded.EventStore.Adapters.InMemory
+
+config :commanded, Commanded.EventStore.Adapters.InMemory,
+  serializer: Commanded.Serialization.JsonSerializer

@@ -1,5 +1,7 @@
 defmodule BankWeb.SessionControllerTest do
   use BankWeb.ConnCase
+  @moduletag :web
+
   import Bank.Factory
 
   describe "new session" do
@@ -13,8 +15,8 @@ defmodule BankWeb.SessionControllerTest do
   describe "create session" do
     test "shows welcome message when credential is valid", %{conn: conn} do
       password = Pbkdf2.hash_pwd_salt("12345678")
-      user = insert(:user, encrypted_password: password)
-      attrs = %{email: user.email, password: "12345678"}
+      user = insert(:user_projection, encrypted_password: password)
+      attrs = %{credential: user.email, password: "12345678"}
 
       conn = post(conn, Routes.session_path(conn, :create), session: attrs)
 
@@ -23,7 +25,7 @@ defmodule BankWeb.SessionControllerTest do
     end
 
     test "shows invalid message when credential is wrong", %{conn: conn} do
-      invalid_attrs = %{email: "invalid", password: "123456"}
+      invalid_attrs = %{credential: "invalid", password: "123456"}
 
       conn = post(conn, Routes.session_path(conn, :create), session: invalid_attrs)
 

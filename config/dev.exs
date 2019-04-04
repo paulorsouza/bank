@@ -70,6 +70,14 @@ config :phoenix, :plug_init_mode, :runtime
 config :bank, Bank.Repo,
   username: "postgres",
   password: "postgres",
-  database: "bank_dev",
+  database: "bank_readstore_dev",
+  hostname: "localhost",
+  pool_size: 10
+
+config :eventstore, EventStore.Storage,
+  serializer: Commanded.Serialization.JsonSerializer,
+  username: "postgres",
+  password: "postgres",
+  database: "bank_eventstore_dev",
   hostname: "localhost",
   pool_size: 10

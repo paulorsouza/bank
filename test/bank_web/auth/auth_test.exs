@@ -1,7 +1,8 @@
 defmodule BankWeb.AuthTest do
   use BankWeb.ConnCase
-  import Bank.Factory
+  @moduletag :web
 
+  import Bank.Factory
   alias BankWeb.Auth
 
   setup %{conn: conn} do
@@ -14,7 +15,7 @@ defmodule BankWeb.AuthTest do
   end
 
   test "login puts the user in the session", %{conn: conn} do
-    user = insert(:user)
+    user = insert(:user_projection)
 
     login_conn =
       conn
@@ -22,7 +23,7 @@ defmodule BankWeb.AuthTest do
       |> send_resp(:ok, "")
 
     next_conn = get(login_conn, "/")
-    assert get_session(next_conn, :user_id) == user.id
+    assert get_session(next_conn, :user_id) == user.uuid
   end
 
   test "logout drops the session", %{conn: conn} do
@@ -47,21 +48,21 @@ defmodule BankWeb.AuthTest do
     test "ensure_authentication continues when the current_user exists", %{conn: conn} do
       conn =
         conn
-        |> assign(:current_user, %Bank.Accounts.User{})
+        |> assign(:current_user, %Bank.Credentials.Projections.User{})
         |> CurrentUser.ensure_authentication([])
 
       refute conn.halted
     end
 
     test "call places user from session into assigns", %{conn: conn} do
-      user = insert(:user)
+      user = insert(:user_projection)
 
       conn =
         conn
-        |> put_session(:user_id, user.id)
+        |> put_session(:user_id, user.uuid)
         |> CurrentUser.call(CurrentUser.init([]))
 
-      assert conn.assigns.current_user.id == user.id
+      assert conn.assigns.current_user.uuid == user.uuid
     end
 
     test "call with no session sets current_user assign to nil", %{conn: conn} do

@@ -19,7 +19,6 @@ defmodule Bank.DataCase do
       alias Bank.Repo
 
       import Ecto
-      import Ecto.Changeset
       import Ecto.Query
       import Bank.DataCase
     end
@@ -32,22 +31,15 @@ defmodule Bank.DataCase do
       Ecto.Adapters.SQL.Sandbox.mode(Bank.Repo, {:shared, self()})
     end
 
-    :ok
-  end
+    if tags[:eventstore] do
+      on_exit(fn ->
+        :ok = Application.stop(:bank)
+        :ok = Application.stop(:commanded)
 
-  @doc """
-  A helper that transforms changeset errors into a map of messages.
-
-      assert {:error, changeset} = Accounts.create_user(%{password: "short"})
-      assert "password is too short" in errors_on(changeset).password
-      assert %{password: ["password is too short"]} = errors_on(changeset)
-
-  """
-  def errors_on(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
-      Enum.reduce(opts, message, fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
+        {:ok, _apps} = Application.ensure_all_started(:bank)
       end)
-    end)
+    end
+
+    :ok
   end
 end

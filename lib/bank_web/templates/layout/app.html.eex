@@ -13,6 +13,7 @@
         <nav role="navigation">
           <span class="nav-items">
             <%= if @current_user do %>
+              <%= @current_user.username %>,
               <%= link "Log out",
                   to: Routes.session_path(@conn, :delete, @current_user),
                   method: "delete" %>
@@ -20,9 +21,6 @@
               <%= link "Register", to: Routes.user_path(@conn, :new) %>
               <%= link "Login", to: Routes.session_path(@conn, :new) %>
             <% end %>
-
-
-
           </span>
         </nav>
         <%= link "PRS Bank", to: Routes.page_path(@conn, :index), class: "bank-logo" %>
