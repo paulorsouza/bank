@@ -13,9 +13,9 @@ defmodule Bank.Application do
       # Start the endpoint when the application starts
       BankWeb.Endpoint,
       # Projectors
-      Bank.Credentials.Supervisor
-
+      Bank.Credentials.Supervisor,
       # Worker
+      {Bank.Support.Unique, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

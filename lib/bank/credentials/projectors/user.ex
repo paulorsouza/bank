@@ -10,7 +10,7 @@ defmodule Bank.Credentials.Projectors.User do
 
   project(%UserCreated{} = created, fn multi ->
     Ecto.Multi.insert(multi, :user, %User{
-      id: created.user_uuid,
+      uuid: created.user_uuid,
       username: created.username,
       email: created.email,
       encrypted_password: created.encrypted_password

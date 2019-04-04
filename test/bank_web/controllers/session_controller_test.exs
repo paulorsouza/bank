@@ -1,5 +1,7 @@
 defmodule BankWeb.SessionControllerTest do
   use BankWeb.ConnCase
+  @moduletag :web
+
   import Bank.Factory
 
   describe "new session" do

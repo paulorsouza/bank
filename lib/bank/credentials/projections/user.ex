@@ -3,11 +3,11 @@ defmodule Bank.Credentials.Projections.User do
 
   use Ecto.Schema
 
-  @primary_key {:id, :binary_id, autogenerate: false}
-
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, :binary_id, autogenerate: false}
   schema "users" do
-    field :username, :string, unique: true
-    field :email, :string, unique: true
+    field :username, :string
+    field :email, :string
     field :encrypted_password, :string
 
     timestamps()

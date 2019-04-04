@@ -3,7 +3,7 @@ defmodule Bank.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users, primary_key: false) do
-      add :id, :binary_id, primary_key: true
+      add :uuid, :binary_id, primary_key: true
       add :email, :string, null: false
       add :encrypted_password, :string, null: false
       add :username, :string, null: false

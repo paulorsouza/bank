@@ -1,5 +1,7 @@
 defmodule BankWeb.UserControllerTest do
   use BankWeb.ConnCase
+  @moduletag :web
+
   import Bank.Factory
 
   describe "new user" do

@@ -1,5 +1,6 @@
 defmodule BankWeb.PageControllerTest do
   use BankWeb.ConnCase
+  @moduletag :web
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

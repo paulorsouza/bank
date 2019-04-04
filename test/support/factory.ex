@@ -8,8 +8,8 @@ defmodule Bank.Factory do
 
   def user_factory do
     %{
-      username: sequence(:user, &"user=#{&1}"),
-      email: sequence(:email, &"email-#{&1}@example.com"),
+      username: sequence(:user, &"user#{&1}"),
+      email: sequence(:email, &"email#{&1}@example.com"),
       password: "12345678",
       password_confirmation: "12345678"
     }
@@ -17,9 +17,9 @@ defmodule Bank.Factory do
 
   def user_projection_factory do
     %User{
-      id: UUID.uuid4(),
-      username: sequence(:user, &"user=#{&1}"),
-      email: sequence(:email, &"email-#{&1}@example.com"),
+      uuid: UUID.uuid4(),
+      username: sequence(:user, &"user#{&1}"),
+      email: sequence(:email, &"email#{&1}@example.com"),
       encrypted_password: "12345678"
     }
   end

@@ -2,7 +2,6 @@ defmodule BankWeb.UserController do
   use BankWeb, :controller
 
   alias Bank.Credentials
-  alias Bank.Credentials.Projections.User
 
   def new(conn, _params) do
     render(conn, "new.html", errors: nil)

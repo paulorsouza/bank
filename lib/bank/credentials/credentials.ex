@@ -36,10 +36,13 @@ defmodule Bank.Credentials do
     Repo.one(query)
   end
 
-  def get_user(id), do: Repo.get(User, id)
+  def get_user_by_email(email), do: Repo.get_by(User, email: email)
+  def get_user_by_username(username), do: Repo.get_by(User, username: username)
 
-  defp get(schema, id) do
-    case Repo.get(schema, id) do
+  def get_user(uuid), do: Repo.get(User, uuid)
+
+  defp get(schema, uuid) do
+    case Repo.get(schema, uuid) do
       nil -> {:error, :not_found}
       projection -> {:ok, projection}
     end
