@@ -7,7 +7,7 @@ defmodule Bank.Accounts.Projections.Wallet do
   schema "wallets" do
     field :user_uuid, :binary_id
     field :username, :string
-    field :balance, :decimal
+    field :balance, :float
 
     timestamps()
   end

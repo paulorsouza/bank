@@ -1,7 +1,8 @@
 defmodule Bank.Accounts.Aggregates.WalletTest do
   use Bank.AggregateCase, aggregate: Bank.Accounts.Aggregates.Wallet
 
-  alias Bank.Accounts.Events.WalletOpened
+  alias Bank.Accounts.Events.{WalletOpened, Withdrawn}
+  alias Bank.Accounts.Commands.Withdraw
 
   describe "open wallet" do
     @tag :aggregates
@@ -15,6 +16,21 @@ defmodule Bank.Accounts.Aggregates.WalletTest do
           user_uuid: open_wallet.user_uuid,
           username: open_wallet.username,
           balance: open_wallet.balance
+        }
+      ])
+    end
+  end
+
+  describe "withdraw" do
+    @describetag :aggregates
+    test "should succeed when valid" do
+      wallet_uuid = UUID.uuid4()
+      wallet_opened = build(:wallet_opened, wallet_uuid: wallet_uuid)
+
+      assert_events(wallet_opened, %Withdraw{wallet_uuid: wallet_uuid, amount: 300.00}, [
+        %Withdrawn{
+          wallet_uuid: wallet_uuid,
+          amount: 300.00
         }
       ])
     end

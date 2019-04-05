@@ -3,7 +3,7 @@ defmodule Bank.Accounts do
   The boundary for the Bank Accounts.
   """
 
-  alias Bank.Accounts.Commands.OpenWallet
+  alias Bank.Accounts.Commands.{OpenWallet, Withdraw}
   alias Bank.Accounts.Projections.Wallet
   alias Bank.Router
 
@@ -17,6 +17,13 @@ defmodule Bank.Accounts do
 
     with :ok <- Router.dispatch(open_wallet, consistency: :strong) do
       get(Wallet, uuid)
+    end
+  end
+
+  def withdraw(%Wallet{uuid: wallet_uuid} = wallet, amount) do
+    with :ok <-
+           Router.dispatch(Withdraw.new(wallet_uuid: wallet_uuid, amount: amount)) do
+      {:ok, %Wallet{wallet | balance: wallet.balance - amount}}
     end
   end
 

@@ -34,6 +34,7 @@ config :commanded_ecto_projections,
 config :vex,
   sources: [
     Bank.Credentials.Validators,
+    Bank.Support.Validators,
     Vex.Validators
   ]
 

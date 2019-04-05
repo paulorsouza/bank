@@ -15,6 +15,7 @@ defmodule Bank.Accounts.Commands.OpenWallet do
 
   validates(:wallet_uuid, uuid: true)
   validates(:user_uuid, uuid: true)
+  validates(:balance, float: true)
 
   def assign_uuid(%OpenWallet{} = open_wallet, uuid) do
     %OpenWallet{open_wallet | wallet_uuid: uuid}

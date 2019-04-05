@@ -7,6 +7,7 @@ defmodule Bank.Factory do
   alias Bank.Credentials.Commands.CreateUser
   alias Bank.Accounts.Projections.Wallet
   alias Bank.Accounts.Commands.OpenWallet
+  alias Bank.Accounts.Events.WalletOpened
 
   def user_factory do
     %{
@@ -49,5 +50,9 @@ defmodule Bank.Factory do
 
   def open_wallet_factory do
     struct(OpenWallet, build(:wallet))
+  end
+
+  def wallet_opened_factory do
+    struct(WalletOpened, build(:wallet))
   end
 end
