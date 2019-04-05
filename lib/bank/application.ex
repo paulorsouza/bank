@@ -12,8 +12,9 @@ defmodule Bank.Application do
       Bank.Repo,
       # Start the endpoint when the application starts
       BankWeb.Endpoint,
-      # Projectors
       Bank.Credentials.Supervisor,
+      Bank.Accounts.Supervisor,
+
       # Worker
       {Bank.Support.Unique, []}
     ]

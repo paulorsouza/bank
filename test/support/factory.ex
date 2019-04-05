@@ -5,6 +5,8 @@ defmodule Bank.Factory do
 
   alias Bank.Credentials.Projections.User
   alias Bank.Credentials.Commands.CreateUser
+  alias Bank.Accounts.Projections.Wallet
+  alias Bank.Accounts.Commands.OpenWallet
 
   def user_factory do
     %{
@@ -26,5 +28,26 @@ defmodule Bank.Factory do
 
   def create_user_factory do
     struct(CreateUser, build(:user))
+  end
+
+  def wallet_factory do
+    %{
+      user_uuid: UUID.uuid4(),
+      username: sequence(:user, &"user#{&1}"),
+      balance: 1000.00
+    }
+  end
+
+  def wallet_projection_factory do
+    %Wallet{
+      uuid: UUID.uuid4(),
+      user_uuid: UUID.uuid4(),
+      username: sequence(:user, &"user#{&1}"),
+      balance: 1000.00
+    }
+  end
+
+  def open_wallet_factory do
+    struct(OpenWallet, build(:wallet))
   end
 end
