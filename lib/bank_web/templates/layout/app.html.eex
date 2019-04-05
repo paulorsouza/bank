@@ -17,6 +17,7 @@
               <%= link "Log out",
                   to: Routes.session_path(@conn, :delete, @current_user),
                   method: "delete" %>
+              <%= link "Wallet", to: Routes.wallet_path(@conn, :show) %>
             <% else %>
               <%= link "Register", to: Routes.user_path(@conn, :new) %>
               <%= link "Login", to: Routes.session_path(@conn, :new) %>

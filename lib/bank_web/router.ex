@@ -25,7 +25,7 @@ defmodule BankWeb.Router do
   scope "/authenticated", BankWeb do
     pipe_through [:browser, :ensure_authentication]
 
-    resources "/users", UserController, only: [:new, :create]
+    resources "/wallets", WalletController, only: [:show], singleton: true
   end
 
   # Other scopes may use custom stacks.
