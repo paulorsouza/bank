@@ -31,14 +31,12 @@ defmodule Bank.DataCase do
       Ecto.Adapters.SQL.Sandbox.mode(Bank.Repo, {:shared, self()})
     end
 
-    if tags[:eventstore] do
-      on_exit(fn ->
-        :ok = Application.stop(:bank)
-        :ok = Application.stop(:commanded)
+    on_exit(fn ->
+      :ok = Application.stop(:bank)
+      :ok = Application.stop(:commanded)
 
-        {:ok, _apps} = Application.ensure_all_started(:bank)
-      end)
-    end
+      {:ok, _apps} = Application.ensure_all_started(:bank)
+    end)
 
     :ok
   end
