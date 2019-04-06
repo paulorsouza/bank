@@ -1,9 +1,10 @@
-defmodule Bank.Accounts.Commands.Withdraw do
+defmodule Bank.Accounts.Commands.ReceiveMoney do
   @moduledoc false
 
   defstruct [
     :transfer_uuid,
     :wallet_uuid,
+    :from_wallet_uuid,
     :amount,
     :operation_date
   ]
@@ -11,6 +12,9 @@ defmodule Bank.Accounts.Commands.Withdraw do
   use ExConstructor
   use Vex.Struct
 
+  alias __MODULE__
+
   validates(:wallet_uuid, uuid: true)
+  validates(:from_wallet_uuid, uuid: true)
   validates(:amount, float: true)
 end

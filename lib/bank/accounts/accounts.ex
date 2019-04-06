@@ -3,7 +3,13 @@ defmodule Bank.Accounts do
   The boundary for the Bank Accounts.
   """
 
-  alias Bank.Accounts.Commands.{OpenWallet, Withdraw, Deposit}
+  alias Bank.Accounts.Commands.{
+    OpenWallet,
+    Withdraw,
+    Deposit,
+    SendMoney
+  }
+
   alias Bank.Accounts.Projections.Wallet
   alias Bank.Router
 
@@ -20,45 +26,58 @@ defmodule Bank.Accounts do
     end
   end
 
-  def withdraw(
-        %Wallet{uuid: wallet_uuid} = wallet,
-        amount,
-        operation_date \\ nil
-      ) do
-    with :ok <-
-           Router.dispatch(
-             Withdraw.new(
-               wallet_uuid: wallet_uuid,
-               amount: amount,
-               operation_date: operation_date
-             )
-           ) do
-      {:ok, %Wallet{wallet | balance: wallet.balance - amount}}
+  def withdraw(wallet_uuid, amount, operation_date \\ Timex.now()) do
+    command =
+      Withdraw.new(
+        wallet_uuid: wallet_uuid,
+        amount: amount,
+        operation_date: operation_date
+      )
+
+    with :ok <- Router.dispatch(command, consistency: :strong) do
+      get(Wallet, wallet_uuid)
     end
   end
 
-  def deposit(
-        %Wallet{uuid: wallet_uuid} = wallet,
-        amount,
-        operation_date \\ nil
-      ) do
-    with :ok <-
-           Router.dispatch(
-             Deposit.new(
-               wallet_uuid: wallet_uuid,
-               amount: amount,
-               operation_date: operation_date
-             )
-           ) do
-      {:ok, %Wallet{wallet | balance: wallet.balance + amount}}
+  def deposit(wallet_uuid, amount, operation_date \\ Timex.now()) do
+    command =
+      Deposit.new(
+        wallet_uuid: wallet_uuid,
+        amount: amount,
+        operation_date: operation_date
+      )
+
+    with :ok <- Router.dispatch(command, consistency: :strong) do
+      get(Wallet, wallet_uuid)
+    end
+  end
+
+  def send_money(wallet_uuid, to_wallet, amount) do
+    command =
+      SendMoney.new(
+        transfer_uuid: UUID.uuid4(),
+        wallet_uuid: wallet_uuid,
+        to_wallet_uuid: to_wallet,
+        amount: amount,
+        operation_date: Timex.now()
+      )
+
+    with :ok <- Router.dispatch(command, consistency: :strong) do
+      get(Wallet, wallet_uuid)
     end
   end
 
   # ReadStore
   alias Bank.Repo
 
+  def get_wallet(uuid), do: Repo.get(Wallet, uuid)
+
   def get_wallet_by_user_uuid(user_uuid) do
     Repo.get_by(Wallet, user_uuid: user_uuid)
+  end
+
+  def get_wallet_by_user_name(username) do
+    Repo.get_by(Wallet, username: username)
   end
 
   defp get(schema, uuid) do

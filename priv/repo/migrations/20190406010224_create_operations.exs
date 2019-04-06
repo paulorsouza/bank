@@ -7,6 +7,8 @@ defmodule Bank.Repo.Migrations.CreateOperations do
       add :type, :integer, null: false
       add :amount, :float, null: false
       add :operation_date, :timestamptz
+      add :from_user, :string, default: ""
+      add :to_user, :string, default: ""
 
       timestamps()
     end

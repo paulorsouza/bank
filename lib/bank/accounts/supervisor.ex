@@ -11,7 +11,8 @@ defmodule Bank.Accounts.Supervisor do
     Supervisor.init(
       [
         Bank.Accounts.Projectors.Wallet,
-        Bank.Accounts.Workflows.OpenWalletFromUser
+        Bank.Accounts.Workflows.OpenWalletFromUser,
+        Bank.Accounts.ProcessManagers.Transfer
       ],
       strategy: :one_for_one
     )

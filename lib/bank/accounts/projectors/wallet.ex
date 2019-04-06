@@ -5,8 +5,16 @@ defmodule Bank.Accounts.Projectors.Wallet do
     consistency: :strong
 
   import Ecto.Query
+  alias Bank.Repo
 
-  alias Bank.Accounts.Events.{WalletOpened, Withdrawn, Deposited}
+  alias Bank.Accounts.Events.{
+    WalletOpened,
+    Withdrawn,
+    Deposited,
+    MoneySent,
+    MoneyReceived
+  }
+
   alias Bank.Accounts.Projections.{Wallet, Operation}
 
   project(%WalletOpened{} = event, fn multi ->
@@ -48,8 +56,55 @@ defmodule Bank.Accounts.Projectors.Wallet do
     )
   end)
 
+  project(%MoneySent{} = event, fn multi ->
+    multi
+    |> Ecto.Multi.run(:to_user, fn _, _ -> get_user(event.to_wallet_uuid) end)
+    |> Ecto.Multi.run(:operation, fn _, %{to_user: to_user} ->
+      operation = %Operation{
+        wallet_uuid: event.wallet_uuid,
+        amount: event.amount,
+        operation_date: convert_datetime(event.operation_date),
+        type: :send_money,
+        to_user: to_user
+      }
+
+      Repo.insert(operation)
+    end)
+    |> Ecto.Multi.update_all(
+      :wallet,
+      wallet_query(event.wallet_uuid),
+      set: [balance: event.new_balance]
+    )
+  end)
+
+  project(%MoneyReceived{} = event, fn multi ->
+    multi
+    |> Ecto.Multi.run(:from_user, fn _, _ -> get_user(event.from_wallet_uuid) end)
+    |> Ecto.Multi.run(:operation, fn _, %{from_user: from_user} ->
+      operation = %Operation{
+        wallet_uuid: event.wallet_uuid,
+        amount: event.amount,
+        operation_date: convert_datetime(event.operation_date),
+        type: :receive_money,
+        from_user: from_user
+      }
+
+      Repo.insert(operation)
+    end)
+    |> Ecto.Multi.update_all(
+      :wallet,
+      wallet_query(event.wallet_uuid),
+      set: [balance: event.new_balance]
+    )
+  end)
+
   defp wallet_query(wallet_uuid) do
     from(w in Wallet, where: w.uuid == ^wallet_uuid)
+  end
+
+  defp get_user(wallet_uuid) do
+    wallet = Repo.get(Wallet, wallet_uuid)
+    {:ok, wallet.username}
   end
 
   defp convert_datetime(nil) do
