@@ -30,7 +30,8 @@ defmodule Bank.Accounts.Aggregates.WalletTest do
       assert_events(wallet_opened, %Withdraw{wallet_uuid: wallet_uuid, amount: 300.00}, [
         %Withdrawn{
           wallet_uuid: wallet_uuid,
-          amount: 300.00
+          amount: 300.00,
+          new_balance: 700.00
         }
       ])
     end
@@ -66,7 +67,8 @@ defmodule Bank.Accounts.Aggregates.WalletTest do
       assert_events(wallet_opened, %Deposit{wallet_uuid: wallet_uuid, amount: 300.00}, [
         %Deposited{
           wallet_uuid: wallet_uuid,
-          amount: 300.00
+          amount: 300.00,
+          new_balance: 1300.00
         }
       ])
     end

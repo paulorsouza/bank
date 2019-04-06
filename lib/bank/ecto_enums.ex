@@ -1,3 +1,3 @@
 import EctoEnum
 
-defenum(UserRoles, user: 0, admin: 10)
+defenum(OperationsType, deposit: 0, withdraw: 1)

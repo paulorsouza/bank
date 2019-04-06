@@ -63,4 +63,35 @@ defmodule Bank.AccountsTest do
       assert wallet.balance == 1600.00
     end
   end
+
+  describe "chaotic operations" do
+    @describetag :fragile
+    test "should project correct operations", %{wallet: wallet, user: user} do
+      [
+        Task.async(fn -> Accounts.withdraw(wallet, 300.00) end),
+        Task.async(fn -> Accounts.withdraw(wallet, 2000.00) end),
+        Task.async(fn -> Accounts.withdraw(wallet, 300.00) end),
+        Task.async(fn -> Accounts.withdraw(wallet, 300.00) end),
+        Task.async(fn -> Accounts.withdraw(wallet, 300.00) end)
+      ]
+      # balance 100.00
+      |> Enum.map(&Task.await/1)
+
+      [
+        Task.async(fn -> Accounts.deposit(wallet, 100.00) end),
+        Task.async(fn -> Accounts.deposit(wallet, 250.00) end),
+        Task.async(fn -> Accounts.deposit(wallet, 560.00) end)
+      ]
+      # balance 1100.00
+      |> Enum.map(&Task.await/1)
+      |> Enum.map(fn x -> IO.inspect(x) end)
+
+      wallet_updated = Accounts.get_wallet_by_user_uuid(user.uuid)
+
+      # This is a fragile test because operations use eventual consitency,
+      # We can use strong consistency to operations, but this project is experimental :D/
+      :timer.sleep(1000)
+      assert wallet_updated.balance == 1010.00
+    end
+  end
 end

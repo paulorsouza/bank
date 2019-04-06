@@ -40,14 +40,18 @@ defmodule Bank.Accounts.Aggregates.Wallet do
   def execute(%Wallet{} = wallet, %Withdraw{} = command) do
     %Withdrawn{
       wallet_uuid: wallet.uuid,
-      amount: command.amount
+      amount: command.amount,
+      operation_date: command.operation_date,
+      new_balance: wallet.balance - command.amount
     }
   end
 
   def execute(%Wallet{} = wallet, %Deposit{} = command) do
     %Deposited{
       wallet_uuid: wallet.uuid,
-      amount: command.amount
+      amount: command.amount,
+      operation_date: command.operation_date,
+      new_balance: wallet.balance + command.amount
     }
   end
 
@@ -62,10 +66,10 @@ defmodule Bank.Accounts.Aggregates.Wallet do
   end
 
   def apply(%Wallet{} = wallet, %Withdrawn{} = event) do
-    %Wallet{wallet | balance: wallet.balance - event.amount}
+    %Wallet{wallet | balance: event.new_balance}
   end
 
   def apply(%Wallet{} = wallet, %Deposited{} = event) do
-    %Wallet{wallet | balance: wallet.balance + event.amount}
+    %Wallet{wallet | balance: event.new_balance}
   end
 end

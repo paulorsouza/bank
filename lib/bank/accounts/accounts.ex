@@ -20,16 +20,36 @@ defmodule Bank.Accounts do
     end
   end
 
-  def withdraw(%Wallet{uuid: wallet_uuid} = wallet, amount) do
+  def withdraw(
+        %Wallet{uuid: wallet_uuid} = wallet,
+        amount,
+        operation_date \\ nil
+      ) do
     with :ok <-
-           Router.dispatch(Withdraw.new(wallet_uuid: wallet_uuid, amount: amount)) do
+           Router.dispatch(
+             Withdraw.new(
+               wallet_uuid: wallet_uuid,
+               amount: amount,
+               operation_date: operation_date
+             )
+           ) do
       {:ok, %Wallet{wallet | balance: wallet.balance - amount}}
     end
   end
 
-  def deposit(%Wallet{uuid: wallet_uuid} = wallet, amount) do
+  def deposit(
+        %Wallet{uuid: wallet_uuid} = wallet,
+        amount,
+        operation_date \\ nil
+      ) do
     with :ok <-
-           Router.dispatch(Deposit.new(wallet_uuid: wallet_uuid, amount: amount)) do
+           Router.dispatch(
+             Deposit.new(
+               wallet_uuid: wallet_uuid,
+               amount: amount,
+               operation_date: operation_date
+             )
+           ) do
       {:ok, %Wallet{wallet | balance: wallet.balance + amount}}
     end
   end

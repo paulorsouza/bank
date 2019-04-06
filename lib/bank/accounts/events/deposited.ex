@@ -4,6 +4,8 @@ defmodule Bank.Accounts.Events.Deposited do
   @derive Jason.Encoder
   defstruct [
     :wallet_uuid,
-    :amount
+    :amount,
+    :operation_date,
+    :new_balance
   ]
 end

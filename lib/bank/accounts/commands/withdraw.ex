@@ -3,7 +3,8 @@ defmodule Bank.Accounts.Commands.Withdraw do
 
   defstruct [
     :wallet_uuid,
-    :amount
+    :amount,
+    :operation_date
   ]
 
   use ExConstructor

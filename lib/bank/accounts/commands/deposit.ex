@@ -3,7 +3,8 @@ defmodule Bank.Accounts.Commands.Deposit do
 
   defstruct [
     :wallet_uuid,
-    :amount
+    :amount,
+    :operation_date
   ]
 
   use ExConstructor
