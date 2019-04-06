@@ -9,13 +9,18 @@ defmodule Bank.AccountsTest do
   alias Bank.Credentials
   alias Bank.Credentials.Projections.User
 
+  setup do
+    create_user = build(:user)
+    assert {:ok, %User{} = user} = Credentials.create_user(create_user)
+    wallet = Accounts.get_wallet_by_user_uuid(user.uuid)
+
+    %{wallet: wallet, user: user}
+  end
+
   describe "an wallet" do
     @describetag :eventstore
 
-    test "should be opened when a new user was created" do
-      create_user = build(:user)
-      assert {:ok, %User{} = user} = Credentials.create_user(create_user)
-
+    test "should be opened when a new user was created", %{user: user} do
       assert_receive_event(WalletOpened, fn event ->
         assert event.user_uuid == user.uuid
         assert event.username == user.username
@@ -26,14 +31,6 @@ defmodule Bank.AccountsTest do
 
   describe "withdraw" do
     @describetag :eventstore
-
-    setup do
-      create_user = build(:user)
-      assert {:ok, %User{} = user} = Credentials.create_user(create_user)
-      wallet = Accounts.get_wallet_by_user_uuid(user.uuid)
-
-      %{wallet: wallet}
-    end
 
     test "subtracts balance in wallet", %{wallet: wallet} do
       assert {:ok, %Wallet{} = wallet} = Accounts.withdraw(wallet, 300.00)
@@ -53,6 +50,17 @@ defmodule Bank.AccountsTest do
       withdraw2 = Task.async(fn -> Accounts.withdraw(wallet, 600.00) end)
       assert {:ok, %Wallet{} = wallet} = Task.await(withdraw1)
       assert {:error, :insufficient_funds} = Task.await(withdraw2)
+    end
+  end
+
+  describe "deposit" do
+    @describetag :eventstore
+
+    test "adds balance in wallet", %{wallet: wallet} do
+      assert {:ok, %Wallet{} = wallet} = Accounts.deposit(wallet, 300.00)
+      assert {:ok, %Wallet{} = wallet} = Accounts.deposit(wallet, 300.00)
+
+      assert wallet.balance == 1600.00
     end
   end
 end

@@ -3,11 +3,11 @@ defmodule Bank.Accounts do
   The boundary for the Bank Accounts.
   """
 
-  alias Bank.Accounts.Commands.{OpenWallet, Withdraw}
+  alias Bank.Accounts.Commands.{OpenWallet, Withdraw, Deposit}
   alias Bank.Accounts.Projections.Wallet
   alias Bank.Router
 
-  def open_wallet(%{user_uuid: uuid} = attrs) do
+  def open_wallet(attrs \\ %{}) do
     uuid = UUID.uuid4()
 
     open_wallet =
@@ -27,8 +27,14 @@ defmodule Bank.Accounts do
     end
   end
 
+  def deposit(%Wallet{uuid: wallet_uuid} = wallet, amount) do
+    with :ok <-
+           Router.dispatch(Deposit.new(wallet_uuid: wallet_uuid, amount: amount)) do
+      {:ok, %Wallet{wallet | balance: wallet.balance + amount}}
+    end
+  end
+
   # ReadStore
-  import Ecto.Query
   alias Bank.Repo
 
   def get_wallet_by_user_uuid(user_uuid) do

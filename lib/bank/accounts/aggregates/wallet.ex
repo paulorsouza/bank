@@ -9,8 +9,8 @@ defmodule Bank.Accounts.Aggregates.Wallet do
   ]
 
   alias __MODULE__
-  alias Bank.Accounts.Events.{WalletOpened, Withdrawn}
-  alias Bank.Accounts.Commands.{OpenWallet, Withdraw}
+  alias Bank.Accounts.Events.{WalletOpened, Withdrawn, Deposited}
+  alias Bank.Accounts.Commands.{OpenWallet, Withdraw, Deposit}
 
   @doc """
   Open a wallet linked with user
@@ -28,13 +28,24 @@ defmodule Bank.Accounts.Aggregates.Wallet do
     {:error, :wallet_not_found}
   end
 
-  def execute(%Wallet{uuid: uuid, balance: balance}, %Withdraw{amount: amount})
+  def execute(%Wallet{uuid: nil}, %Deposit{}) do
+    {:error, :wallet_not_found}
+  end
+
+  def execute(%Wallet{balance: balance}, %Withdraw{amount: amount})
       when amount > balance do
     {:error, :insufficient_funds}
   end
 
   def execute(%Wallet{} = wallet, %Withdraw{} = command) do
     %Withdrawn{
+      wallet_uuid: wallet.uuid,
+      amount: command.amount
+    }
+  end
+
+  def execute(%Wallet{} = wallet, %Deposit{} = command) do
+    %Deposited{
       wallet_uuid: wallet.uuid,
       amount: command.amount
     }
@@ -52,5 +63,9 @@ defmodule Bank.Accounts.Aggregates.Wallet do
 
   def apply(%Wallet{} = wallet, %Withdrawn{} = event) do
     %Wallet{wallet | balance: wallet.balance - event.amount}
+  end
+
+  def apply(%Wallet{} = wallet, %Deposited{} = event) do
+    %Wallet{wallet | balance: wallet.balance + event.amount}
   end
 end
