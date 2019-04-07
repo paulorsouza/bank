@@ -42,5 +42,6 @@ defmodule BankWeb.Router do
 
     resources "/withdraws", Api.WithdrawController, only: [:create], as: :withdraw_api
     resources "/wallets", Api.WalletController, only: [:show], singleton: true, as: :wallet_api
+    resources "/transfers", Api.TransferController, only: [:create], as: :transfer_api
   end
 end

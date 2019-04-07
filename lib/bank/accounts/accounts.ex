@@ -77,11 +77,15 @@ defmodule Bank.Accounts do
     Repo.get_by(Wallet, user_uuid: user_uuid)
   end
 
-  def get_wallet_by_user_name(username) do
+  def get_wallet_by_user_name(username) when is_binary(username) do
     case Repo.get_by(Wallet, username: username) do
       nil -> {:error, :wallet_not_found}
       wallet -> {:ok, wallet}
     end
+  end
+
+  def get_wallet_by_user_name(username) do
+    {:error, :wallet_not_found}
   end
 
   def list_operations(wallet_uuid) do

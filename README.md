@@ -177,4 +177,49 @@ http://localhost:4000
     $ curl -X POST -d '{"credential": "username", "password": "password", "value": "200,22"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/withdraws
   ```
 
+**Transfer**
+----
+   Send money to another wallet(you can send to your own wallet :D, this can help in tests)
+
+* **URL**
+
+  api/v1/transfers
+
+* **HTTP Verb:**
+  
+  `POST`
+
+* **Payload**
+
+  * credential :string *required* (username or email)
+  * password :string *required*
+  * to_user :string *required* (wallet detination username)
+  * value :number *required*
+  
+* **Return**   
+  
+  * balance
+
+* **Sample:**
+
+  ```javascript
+     fetch("http://localhost:4000/api/v1/transfers", {
+        method: "GET",
+        headers: {
+           "Accept": "application/json",
+           'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          credential: "username",
+          to_user: "username",
+          password: "password",
+          value: "200,00"
+        })
+     })
+  ```
+
+  ```shell
+    $ curl -X POST -d '{"credential": "username", "password": "password", "to_user": "username", "value": "200,00"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/transfers
+  ```
+
 

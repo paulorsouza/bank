@@ -29,6 +29,9 @@ defmodule Bank.Accounts.Aggregates.Wallet do
   def execute(%Wallet{uuid: nil}, %SendMoney{}), do: {:error, :wallet_not_found}
   def execute(%Wallet{uuid: nil}, %ReceiveMoney{}), do: {:error, :wallet_not_found}
 
+  def execute(_, %Withdraw{amount: amount}) when amount <= 0.0, do: {:error, :invalid_value}
+  def execute(_, %SendMoney{amount: amount}) when amount <= 0.0, do: {:error, :invalid_value}
+
   def execute(%Wallet{balance: balance}, %Withdraw{amount: amount})
       when amount > balance,
       do: {:error, :insufficient_funds}

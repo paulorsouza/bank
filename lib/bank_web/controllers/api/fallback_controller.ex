@@ -15,10 +15,24 @@ defmodule BankWeb.Api.FallbackController do
     |> render(:"404")
   end
 
+  def call(conn, {:error, :insufficient_funds}) do
+    conn
+    |> put_status(422)
+    |> put_view(BankWeb.ErrorView)
+    |> render(:"422", detail: "Insufficient founds")
+  end
+
   def call(conn, {:error, :invalid_value}) do
     conn
-    |> put_status(400)
+    |> put_status(422)
     |> put_view(BankWeb.ErrorView)
-    |> render(:"400")
+    |> render(:"422", detail: "Invalid value")
+  end
+
+  def call(conn, {:error, :wallet_not_found}) do
+    conn
+    |> put_status(422)
+    |> put_view(BankWeb.ErrorView)
+    |> render(:"422", detail: "Wallet not found")
   end
 end

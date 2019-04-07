@@ -17,6 +17,10 @@ defmodule BankWeb.ErrorView do
     %{errors: %{detail: "Page not found"}}
   end
 
+  def render("422.json", %{detail: detail}) do
+    %{errors: %{detail: detail}}
+  end
+
   def render("500.json", _assigns) do
     %{errors: %{detail: "Internal server error"}}
   end

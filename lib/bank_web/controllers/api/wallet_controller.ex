@@ -1,7 +1,6 @@
 defmodule BankWeb.Api.WalletController do
   use BankWeb, :controller
 
-  alias Bank.Credentials
   alias Bank.Accounts
   alias Bank.Accounts.Projections.Wallet
 

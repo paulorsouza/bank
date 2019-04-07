@@ -21,9 +21,7 @@ defmodule BankWeb.Api.WithdrawControllerTest do
       conn = post conn, Routes.withdraw_api_path(conn, :create), withdraw
       json = json_response(conn, 200)["data"]
 
-      assert json == %{
-               "balance" => "R$ 800,00"
-             }
+      assert json == %{"balance" => "R$ 800,00"}
     end
 
     test "should fail with invalid value", %{conn: conn} do
@@ -38,8 +36,25 @@ defmodule BankWeb.Api.WithdrawControllerTest do
 
       conn = post conn, Routes.withdraw_api_path(conn, :create), withdraw
 
-      assert json_response(conn, 400)["errors"] == %{
-               "detail" => "Bad Request"
+      assert json_response(conn, 422)["errors"] == %{
+               "detail" => "Invalid value"
+             }
+    end
+
+    test "should fail with value grather than current balance", %{conn: conn} do
+      create_user = build(:user)
+      {:ok, %User{} = _user} = Credentials.create_user(create_user)
+
+      withdraw = %{
+        "credential" => create_user.username,
+        "password" => create_user.password,
+        "value" => "2000,00"
+      }
+
+      conn = post conn, Routes.withdraw_api_path(conn, :create), withdraw
+
+      assert json_response(conn, 422)["errors"] == %{
+               "detail" => "Insufficient founds"
              }
     end
   end
