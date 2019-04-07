@@ -1,0 +1,16 @@
+<h1>Balance</h1>
+
+<ul>
+  <%= for balance <- @balance do %>
+  <li>
+    <span><%= Map.get(balance, :day) %></span>
+    <span><%= Map.get(balance, :month) %></span>
+    <span><%= Map.get(balance, :year) %></span>
+    <span><%= "Debits: #{to_real(balance.debit)}" %></span>
+    <span><%= "Credits: #{to_real(balance.credit)}" %></span>
+    <span><%= "Balance: #{to_real(balance.total)}" %></span>
+  </li>
+  <% end %>
+</ul>
+
+<span><%= link "Wallet", to: Routes.wallet_path(@conn, :show) %></span>

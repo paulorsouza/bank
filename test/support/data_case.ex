@@ -21,6 +21,19 @@ defmodule Bank.DataCase do
       import Ecto
       import Ecto.Query
       import Bank.DataCase
+
+      defp wait(assertation), do: wait(assertation, 5)
+      defp wait(assertation, 0), do: assertation.()
+
+      defp wait(assertation, tries) do
+        try do
+          assertation.()
+        rescue
+          _ ->
+            :timer.sleep(300)
+            wait(assertation, tries - 1)
+        end
+      end
     end
   end
 

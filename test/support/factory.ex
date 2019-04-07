@@ -5,8 +5,9 @@ defmodule Bank.Factory do
 
   alias Bank.Credentials.Projections.User
   alias Bank.Credentials.Commands.CreateUser
-  alias Bank.Accounts.Projections.Wallet
+  alias Bank.Accounts.Projections.{Wallet, Operation}
   alias Bank.Accounts.Commands.OpenWallet
+  alias Bank.Accounts.Events.WalletOpened
 
   def user_factory do
     %{
@@ -47,7 +48,22 @@ defmodule Bank.Factory do
     }
   end
 
+  def operation_projection_factory do
+    %Operation{
+      wallet_uuid: UUID.uuid4(),
+      type: :deposit,
+      amount: 1000.00,
+      from_user: "",
+      to_user: "",
+      operation_date: Timex.now()
+    }
+  end
+
   def open_wallet_factory do
     struct(OpenWallet, build(:wallet))
+  end
+
+  def wallet_opened_factory do
+    struct(WalletOpened, build(:wallet))
   end
 end

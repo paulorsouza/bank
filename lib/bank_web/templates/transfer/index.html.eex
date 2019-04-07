@@ -1,0 +1,26 @@
+<h1>Bank Statement</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>amount</th>
+      <th>To user</th>
+      <th>From user</th>
+      <th>Operation date</th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for operation <- @operations do %>
+    <tr>
+      <td><%= operation.type %></td>
+      <td><%= to_real(operation.amount) %></td>
+      <td><%= operation.to_user %></td>
+      <td><%= operation.from_user %></td>
+      <td><%= operation.operation_date %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Wallet", to: Routes.wallet_path(@conn, :show) %></span>

@@ -6,6 +6,8 @@ defmodule BankWeb.ErrorHelpers do
   use Phoenix.HTML
 
   def error_tag(nil, _field), do: nil
+  def error_tag(true, _field), do: nil
+  def error_tag(errors, _field) when is_binary(errors), do: nil
 
   def error_tag(errors, field) do
     Enum.map(Map.get(errors, field, []), fn error ->

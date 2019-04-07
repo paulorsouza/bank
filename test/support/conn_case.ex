@@ -26,6 +26,14 @@ defmodule BankWeb.ConnCase do
     end
   end
 
+  @session Plug.Session.init(
+             store: :cookie,
+             key: "_bank_test",
+             encryption_salt: "secret",
+             signing_salt: "secret",
+             encrypt: false
+           )
+
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Bank.Repo)
 
@@ -40,6 +48,24 @@ defmodule BankWeb.ConnCase do
       {:ok, _apps} = Application.ensure_all_started(:bank)
     end)
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    if tags[:logged_in] do
+      user = Bank.Factory.insert(:user_projection, %{})
+
+      wallet =
+        Bank.Factory.insert(:wallet_projection, %{
+          user_uuid: user.uuid,
+          username: user.username
+        })
+
+      conn =
+        Phoenix.ConnTest.build_conn()
+        |> Plug.Session.call(@session)
+        |> Plug.Conn.fetch_session()
+        |> BankWeb.Auth.login(user)
+
+      {:ok, conn: conn, user: user, wallet: wallet}
+    else
+      {:ok, conn: Phoenix.ConnTest.build_conn()}
+    end
   end
 end

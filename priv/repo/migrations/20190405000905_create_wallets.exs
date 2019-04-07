@@ -6,7 +6,7 @@ defmodule Bank.Repo.Migrations.CreateWallets do
       add :uuid, :binary_id, primary_key: true
       add :user_uuid, :binary_id, null: false
       add :username, :string, null: false
-      add :balance, :numeric, null: false
+      add :balance, :float, null: false
 
       timestamps()
     end

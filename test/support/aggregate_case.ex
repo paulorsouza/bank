@@ -11,11 +11,14 @@ defmodule Bank.AggregateCase do
 
       import Bank.Factory
 
-      # Assert that the expected events are returned when the given commands have been executed
       defp assert_events(commands, expected_events) do
+        assert_events([], commands, expected_events)
+      end
+
+      defp assert_events(initial_events, commands, expected_events) do
         {_aggregate, events, error} =
           %@aggregate_module{}
-          |> evolve([])
+          |> evolve(initial_events)
           |> execute(commands)
 
         actual_events = List.wrap(events)
@@ -24,7 +27,19 @@ defmodule Bank.AggregateCase do
         assert expected_events == actual_events
       end
 
-      # Execute one or more commands against an aggregate
+      defp assert_error(commands, expected_error) do
+        assert_error([], commands, expected_error)
+      end
+
+      defp assert_error(initial_events, commands, expected_error) do
+        {_aggregate, _events, error} =
+          %@aggregate_module{}
+          |> evolve(initial_events)
+          |> execute(commands)
+
+        assert error == expected_error
+      end
+
       defp execute(aggregate, commands) do
         commands
         |> List.wrap()
@@ -40,7 +55,6 @@ defmodule Bank.AggregateCase do
         end)
       end
 
-      # Apply the given events to the aggregate state
       defp evolve(aggregate, events) do
         events
         |> List.wrap()

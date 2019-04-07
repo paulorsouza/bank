@@ -4,12 +4,33 @@ defmodule Bank.Router do
   alias Bank.Credentials.Aggregates.User
   alias Bank.Credentials.Commands.CreateUser
   alias Bank.Accounts.Aggregates.Wallet
-  alias Bank.Accounts.Commands.OpenWallet
+
+  alias Bank.Accounts.Commands.{
+    OpenWallet,
+    Withdraw,
+    Deposit,
+    SendMoney,
+    ReceiveMoney
+  }
+
   alias Bank.Support.Middleware.{Validate, Uniqueness}
 
   middleware(Validate)
   middleware(Uniqueness)
 
-  dispatch([CreateUser], to: User, identity: :user_uuid)
-  dispatch([OpenWallet], to: Wallet, identity: :wallet_uuid)
+  identify(User, by: :user_uuid, prefix: "user-")
+  identify(Wallet, by: :wallet_uuid, prefix: "wallet-")
+
+  dispatch([CreateUser], to: User)
+
+  dispatch(
+    [
+      OpenWallet,
+      Withdraw,
+      Deposit,
+      SendMoney,
+      ReceiveMoney
+    ],
+    to: Wallet
+  )
 end

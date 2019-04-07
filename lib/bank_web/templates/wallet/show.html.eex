@@ -1,5 +1,13 @@
 <h1>Wallet</h1>
 
 <div>
-  Balance: <%= @balance %>
+  Balance: <%= to_real(@balance) %>
 </div> 
+
+<%= button "Withdraw", class: "options", to: Routes.withdraw_path(@conn, :new), method: "get" %>
+<%= button "Send Money", class: "options", to: Routes.transfer_path(@conn, :new), method: "get"  %>
+<%= button "Transactions", class: "options", to: Routes.transfer_path(@conn, :index), method: "get"  %>
+<%= button "Balance", class: "options", to: Routes.balance_path(@conn, :index, "total"), method: "get"  %>
+<%= button "Daily balance", class: "options", to: Routes.balance_path(@conn, :index, "day"), method: "get"  %>
+<%= button "Monthly balance", class: "options", to: Routes.balance_path(@conn, :index, "month"), method: "get"  %>
+<%= button "Annual balance", class: "options", to: Routes.balance_path(@conn, :index, "year"), method: "get"  %>
