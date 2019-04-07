@@ -26,7 +26,7 @@ defmodule Bank.Accounts.Aggregates.Wallet do
 
   def execute(%Wallet{uuid: nil}, %Withdraw{}), do: {:error, :wallet_not_found}
   def execute(%Wallet{uuid: nil}, %Deposit{}), do: {:error, :wallet_not_found}
-  def execute(%Wallet{uuid: nil}, %MoneySent{}), do: {:error, :wallet_not_found}
+  def execute(%Wallet{uuid: nil}, %SendMoney{}), do: {:error, :wallet_not_found}
   def execute(%Wallet{uuid: nil}, %ReceiveMoney{}), do: {:error, :wallet_not_found}
 
   def execute(%Wallet{balance: balance}, %Withdraw{amount: amount})

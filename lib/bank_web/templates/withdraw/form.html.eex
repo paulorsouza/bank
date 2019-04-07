@@ -1,0 +1,19 @@
+<%= form_for @conn, @action, [class: "form-withdraw"], fn f -> %>
+  <%= if @errors do %>
+    <div class="alert alert-danger">
+      <%= if is_binary(@errors) do %>
+        <p><%= @errors %></p>
+      <% else %>
+        <p>Oops, something went wrong!</p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= label f, "Value" %>
+  <%= text_input f, :amount, type: :number, min: "0.01", step: "0.01" %>
+  <%= error_tag @errors, :amount %>
+
+  <div>
+    <%= submit "Confirm" %>
+  </div>
+<% end %>

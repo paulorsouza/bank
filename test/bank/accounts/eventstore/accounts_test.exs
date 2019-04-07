@@ -1,4 +1,4 @@
-defmodule Bank.AccountsTest do
+defmodule Bank.EventStore.AccountsTest do
   use Bank.DataCase
   import Bank.Factory
   import Commanded.Assertions.EventAssertions
@@ -139,14 +139,11 @@ defmodule Bank.AccountsTest do
       ]
       # balance 1100.00
       |> Enum.map(&Task.await/1)
-      |> Enum.map(fn x -> IO.inspect(x) end)
 
-      wallet_updated = Accounts.get_wallet_by_user_uuid(user.uuid)
-
-      # This is a fragile test because operations use eventual consitency,
-      # We can use strong consistency to operations, but this project is experimental :D/
-      :timer.sleep(1000)
-      assert wallet_updated.balance == 1010.00
+      wait(fn ->
+        wallet_updated = Accounts.get_wallet_by_user_uuid(user.uuid)
+        assert wallet_updated.balance == 1010.00
+      end)
     end
   end
 end

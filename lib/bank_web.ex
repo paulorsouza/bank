@@ -24,6 +24,13 @@ defmodule BankWeb do
       import Plug.Conn
       import BankWeb.Gettext
       alias BankWeb.Router.Helpers, as: Routes
+      alias Bank.Support.Utils
+
+      def get_wallet(conn) do
+        conn
+        |> get_session(:user_id)
+        |> Bank.Accounts.get_wallet_by_user_uuid()
+      end
     end
   end
 

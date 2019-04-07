@@ -16,3 +16,12 @@
   padding-right: 8px;
   padding-left: 6px;
 }
+
+.options {
+  margin: 18px 5px 2px 5px;
+  width: 170px;
+}
+
+.form-transfer #username, #amount{
+  width: 200px;
+}

@@ -77,7 +77,10 @@ defmodule Bank.Accounts do
   end
 
   def get_wallet_by_user_name(username) do
-    Repo.get_by(Wallet, username: username)
+    case Repo.get_by(Wallet, username: username) do
+      nil -> {:error, :wallet_not_found}
+      wallet -> {:ok, wallet}
+    end
   end
 
   defp get(schema, uuid) do

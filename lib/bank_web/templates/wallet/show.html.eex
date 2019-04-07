@@ -3,3 +3,8 @@
 <div>
   Balance: <%= @balance %>
 </div> 
+
+<%= button "Withdraw", class: "options", to: Routes.withdraw_path(@conn, :new), method: "get" %>
+<%= button "Send Money", class: "options", to: Routes.transfer_path(@conn, :new), method: "get"  %>
+<%= button "Transactions", class: "options", to: Routes.withdraw_path(@conn, :new), method: "get"  %>
+<%= button "Balance", class: "options", to: Routes.withdraw_path(@conn, :new), method: "get"  %>

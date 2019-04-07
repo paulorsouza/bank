@@ -1,8 +1,20 @@
 defmodule Bank.Accounts.Aggregates.WalletTest do
   use Bank.AggregateCase, aggregate: Bank.Accounts.Aggregates.Wallet
 
-  alias Bank.Accounts.Events.{WalletOpened, Withdrawn, Deposited}
-  alias Bank.Accounts.Commands.{Withdraw, Deposit}
+  alias Bank.Accounts.Events.{
+    WalletOpened,
+    Withdrawn,
+    Deposited,
+    MoneySent,
+    MoneyReceived
+  }
+
+  alias Bank.Accounts.Commands.{
+    Withdraw,
+    Deposit,
+    SendMoney,
+    ReceiveMoney
+  }
 
   describe "open wallet" do
     @tag :aggregates
@@ -79,6 +91,89 @@ defmodule Bank.Accounts.Aggregates.WalletTest do
       assert_error(
         wallet_opened,
         %Deposit{wallet_uuid: nil, amount: 1300.00},
+        {:error, :wallet_not_found}
+      )
+    end
+  end
+
+  describe "send_money" do
+    @describetag :aggregates
+    test "should succeed when valid" do
+      wallet_uuid = UUID.uuid4()
+      wallet_opened = build(:wallet_opened, wallet_uuid: wallet_uuid)
+
+      send_money = %SendMoney{
+        transfer_uuid: wallet_uuid,
+        wallet_uuid: wallet_uuid,
+        to_wallet_uuid: wallet_uuid,
+        amount: 400.00
+      }
+
+      assert_events(wallet_opened, send_money, [
+        %MoneySent{
+          wallet_uuid: wallet_uuid,
+          transfer_uuid: wallet_uuid,
+          to_wallet_uuid: wallet_uuid,
+          amount: 400.00,
+          new_balance: 600.00,
+          operation_date: nil
+        }
+      ])
+    end
+
+    test "should fail when send money is great than balance" do
+      wallet_uuid = UUID.uuid4()
+      wallet_opened = build(:wallet_opened, wallet_uuid: wallet_uuid)
+
+      assert_error(
+        wallet_opened,
+        %SendMoney{wallet_uuid: wallet_uuid, amount: 1300.00},
+        {:error, :insufficient_funds}
+      )
+    end
+
+    test "should fail when wallet is not found" do
+      wallet_opened = build(:wallet_opened, wallet_uuid: nil)
+
+      assert_error(
+        wallet_opened,
+        %SendMoney{wallet_uuid: nil, amount: 1300.00},
+        {:error, :wallet_not_found}
+      )
+    end
+  end
+
+  describe "receive_money" do
+    @describetag :aggregates
+    test "should succeed when valid" do
+      wallet_uuid = UUID.uuid4()
+      wallet_opened = build(:wallet_opened, wallet_uuid: wallet_uuid)
+
+      receive_money = %ReceiveMoney{
+        transfer_uuid: wallet_uuid,
+        wallet_uuid: wallet_uuid,
+        from_wallet_uuid: wallet_uuid,
+        amount: 400.00
+      }
+
+      assert_events(wallet_opened, receive_money, [
+        %MoneyReceived{
+          wallet_uuid: wallet_uuid,
+          transfer_uuid: wallet_uuid,
+          from_wallet_uuid: wallet_uuid,
+          amount: 400.00,
+          new_balance: 1400.00,
+          operation_date: nil
+        }
+      ])
+    end
+
+    test "should fail when wallet is not found" do
+      wallet_opened = build(:wallet_opened, wallet_uuid: nil)
+
+      assert_error(
+        wallet_opened,
+        %ReceiveMoney{wallet_uuid: nil, amount: 1300.00},
         {:error, :wallet_not_found}
       )
     end

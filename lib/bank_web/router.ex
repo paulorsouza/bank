@@ -26,6 +26,8 @@ defmodule BankWeb.Router do
     pipe_through [:browser, :ensure_authentication]
 
     resources "/wallets", WalletController, only: [:show], singleton: true
+    resources "/withdraws", WithdrawController, only: [:new, :create]
+    resources "/transfers", TransferController, only: [:new, :create]
   end
 
   # Other scopes may use custom stacks.

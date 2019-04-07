@@ -4,11 +4,9 @@ defmodule BankWeb.WalletController do
   alias Bank.Accounts
 
   def show(conn, _params) do
-    wallet =
-      conn
-      |> get_session(:user_id)
-      |> Accounts.get_wallet_by_user_uuid()
+    wallet = get_wallet(conn)
+    balance = Utils.Float.to_real(wallet.balance)
 
-    render(conn, "show.html", balance: wallet.balance)
+    render(conn, "show.html", balance: balance)
   end
 end
