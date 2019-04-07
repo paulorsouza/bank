@@ -1,14 +1,12 @@
 defmodule Bank.Credentials.Commands.CreateUser do
   @moduledoc false
 
-  defstruct [
-    :user_uuid,
-    :username,
-    :email,
-    :password,
-    :password_confirmation,
-    :encrypted_password
-  ]
+  defstruct user_uuid: nil,
+            username: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
+            encrypted_password: nil
 
   use ExConstructor
   use Vex.Struct

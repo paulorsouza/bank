@@ -31,8 +31,9 @@ defmodule BankWeb.Router do
     get "/balances/:period", BalanceController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", BankWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", BankWeb do
+    pipe_through :api
+
+    resources "/users", Api.UserController, only: [:create], as: :user_api
+  end
 end
