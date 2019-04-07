@@ -1,12 +1,10 @@
 defmodule Bank.Accounts.Commands.Withdraw do
   @moduledoc false
 
-  defstruct [
-    :transfer_uuid,
-    :wallet_uuid,
-    :amount,
-    :operation_date
-  ]
+  defstruct transfer_uuid: nil,
+            wallet_uuid: nil,
+            amount: nil,
+            operation_date: nil
 
   use ExConstructor
   use Vex.Struct

@@ -59,7 +59,7 @@ http://localhost:4000
 
 * **URL**
 
-  api/v1/user
+  api/v1/users
 
 * **HTTP Verb:**
   
@@ -70,7 +70,12 @@ http://localhost:4000
   * username :string *required*
   * email :string *required*
   * password :string *required*
+
+* **Return**   
   
+  * username
+  * email
+
 * **Sample:**
 
   ```javascript
@@ -91,3 +96,85 @@ http://localhost:4000
   ```shell
     $ curl -X POST -d '{"username": "username", "email": "email@email.com", "password": "password"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/users
   ```
+
+**Wallet**
+----
+   Get current balance
+
+* **URL**
+
+  api/v1/wallets
+
+* **HTTP Verb:**
+  
+  `GET`
+
+* **Payload**
+
+  * credential :string *required* (username or email)
+  * password :string *required*
+  
+* **Return**   
+  
+  * balance
+
+* **Sample:**
+
+  ```javascript
+     fetch("http://localhost:4000/api/v1/wallets?credential=username&password=password", {
+        method: "GET",
+        headers: {
+           "Accept": "application/json",
+           'Content-Type': 'application/json'
+        }
+     })
+  ```
+
+  ```shell
+    $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/wallets?credential=username&password=password
+  ```
+
+**Withdraw**
+----
+   Do a withdraw in user wallet
+
+* **URL**
+
+  api/v1/withdraws
+
+* **HTTP Verb:**
+  
+  `POST`
+
+* **Payload**
+
+  * credential :string *required* (username or email)
+  * password :string *required*
+  * value :number *required*
+  
+* **Return**   
+  
+  * balance
+
+* **Sample:**
+
+  ```javascript
+     fetch("http://localhost:4000/api/v1/withdraws", {
+        method: "GET",
+        headers: {
+           "Accept": "application/json",
+           'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          credential: "username",
+          password: "password",
+          value: "200,22"
+        })
+     })
+  ```
+
+  ```shell
+    $ curl -X POST -d '{"credential": "username", "password": "password", "value": "200,22"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/withdraws
+  ```
+
+

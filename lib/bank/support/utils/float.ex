@@ -13,11 +13,15 @@ defmodule Bank.Support.Utils.Float do
   def from_input(""), do: 0.00
 
   def from_input(string) when is_binary(string) do
-    {float, _} =
-      string
-      |> String.replace(",", ".")
-      |> Float.parse()
+    try do
+      {float, _} =
+        string
+        |> String.replace(",", ".")
+        |> Float.parse()
 
-    Float.ceil(float, 2)
+      Float.ceil(float, 2)
+    rescue
+      _ -> {:error, :invalid_value}
+    end
   end
 end

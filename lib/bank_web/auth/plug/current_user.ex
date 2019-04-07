@@ -12,6 +12,7 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
 
   alias BankWeb.Router.Helpers, as: Routes
   alias Bank.Credentials
+  alias Bank.Credentials.Projections.User
 
   def init(opts), do: opts
 
@@ -42,6 +43,22 @@ defmodule BankWeb.Auth.Plug.CurrentUser do
       |> put_flash(:error, "You must be logged in to access that page")
       |> redirect(to: Routes.page_path(conn, :index))
       |> halt()
+    end
+  end
+
+  def validate_credentials(conn, _otps) do
+    with %{"credential" => credential, "password" => password} <- conn.params,
+         %User{} = user <- Credentials.get_user_by_user_or_email(credential),
+         true <- Credentials.Auth.valid_password?(user, password) do
+      conn
+      |> assign(:current_user, user)
+    else
+      _ ->
+        conn
+        |> put_status(:unauthorized)
+        |> Phoenix.Controller.put_view(BankWeb.ErrorView)
+        |> Phoenix.Controller.render(:"401")
+        |> halt()
     end
   end
 end

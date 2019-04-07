@@ -32,8 +32,15 @@ defmodule BankWeb.Router do
   end
 
   scope "/api/v1", BankWeb do
-    pipe_through :api
+    pipe_through [:api]
 
     resources "/users", Api.UserController, only: [:create], as: :user_api
+  end
+
+  scope "/api/v1", BankWeb do
+    pipe_through [:api, :validate_credentials]
+
+    resources "/withdraws", Api.WithdrawController, only: [:create], as: :withdraw_api
+    resources "/wallets", Api.WalletController, only: [:show], singleton: true, as: :wallet_api
   end
 end

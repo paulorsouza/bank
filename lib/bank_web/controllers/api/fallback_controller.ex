@@ -14,4 +14,11 @@ defmodule BankWeb.Api.FallbackController do
     |> put_view(BankWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :invalid_value}) do
+    conn
+    |> put_status(400)
+    |> put_view(BankWeb.ErrorView)
+    |> render(:"400")
+  end
 end
