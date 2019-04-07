@@ -10,6 +10,8 @@ defmodule Bank.Support.Utils.Float do
     |> String.replace_prefix("", "R$ ")
   end
 
+  def from_input(""), do: 0.00
+
   def from_input(string) when is_binary(string) do
     {float, _} =
       string

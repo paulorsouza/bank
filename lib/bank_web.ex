@@ -48,6 +48,7 @@ defmodule BankWeb do
 
       import BankWeb.ErrorHelpers
       import BankWeb.Gettext
+      import BankWeb.Utils
       alias BankWeb.Router.Helpers, as: Routes
     end
   end

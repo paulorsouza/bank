@@ -45,14 +45,18 @@ defmodule Bank.EventStore.AccountsTest do
     end
 
     test "should fail when asyncronous request sum of amount is greader than balance", %{
-      wallet: wallet
+      wallet: wallet,
+      user: user
     } do
       wallet_uuid = wallet.uuid
 
-      withdraw1 = Task.async(fn -> Accounts.withdraw(wallet_uuid, 600.00) end)
-      withdraw2 = Task.async(fn -> Accounts.withdraw(wallet_uuid, 600.00) end)
-      assert {:ok, %Wallet{} = wallet} = Task.await(withdraw1)
-      assert {:error, :insufficient_funds} = Task.await(withdraw2)
+      Task.async(fn -> Accounts.withdraw(wallet_uuid, 600.00) end)
+      Task.async(fn -> Accounts.withdraw(wallet_uuid, 600.00) end)
+
+      wait(fn ->
+        wallet_updated = Accounts.get_wallet_by_user_uuid(user.uuid)
+        assert wallet_updated.balance == 400.00
+      end)
     end
   end
 
@@ -107,13 +111,16 @@ defmodule Bank.EventStore.AccountsTest do
 
     test "should fail when asyncronous request sum of sent money is greader than balance", %{
       wallet1: wallet1,
-      wallet2: wallet2
+      wallet2: wallet2,
+      user: user
     } do
-      transfer1 = Task.async(fn -> Accounts.send_money(wallet1, wallet2, 600.00) end)
-      transfer2 = Task.async(fn -> Accounts.send_money(wallet1, wallet2, 600.00) end)
+      Task.async(fn -> Accounts.send_money(wallet1, wallet2, 600.00) end)
+      Task.async(fn -> Accounts.send_money(wallet1, wallet2, 600.00) end)
 
-      assert {:ok, %Wallet{} = wallet} = Task.await(transfer1)
-      assert {:error, :insufficient_funds} = Task.await(transfer2)
+      wait(fn ->
+        wallet_updated = Accounts.get_wallet_by_user_uuid(user.uuid)
+        assert wallet_updated.balance == 400.00
+      end)
     end
   end
 

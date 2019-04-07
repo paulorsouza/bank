@@ -27,7 +27,8 @@ defmodule BankWeb.Router do
 
     resources "/wallets", WalletController, only: [:show], singleton: true
     resources "/withdraws", WithdrawController, only: [:new, :create]
-    resources "/transfers", TransferController, only: [:new, :create]
+    resources "/transfers", TransferController, only: [:new, :create, :index]
+    get "/balances/:period", BalanceController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -8,6 +8,16 @@ defmodule BankWeb.TransferController do
     render(conn, "new.html", errors: nil)
   end
 
+  def index(conn, _params) do
+    with %Wallet{uuid: uuid} <- get_wallet(conn),
+         operations when is_list(operations) <- Accounts.list_operations(uuid) do
+      render(conn, "index.html", operations: operations)
+    else
+      _ ->
+        render(conn, "index.html", operations: [])
+    end
+  end
+
   def create(conn, %{"username" => username, "amount" => value}) do
     with %Wallet{uuid: uuid} <- get_wallet(conn),
          {:ok, %Wallet{uuid: to_wallet_uuid}} <- Accounts.get_wallet_by_user_name(username),

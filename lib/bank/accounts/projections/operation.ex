@@ -3,7 +3,6 @@ defmodule Bank.Accounts.Projections.Operation do
 
   use Ecto.Schema
 
-  @primary_key false
   schema "operations" do
     field :wallet_uuid, :binary_id
     field :operation_date, :utc_datetime_usec

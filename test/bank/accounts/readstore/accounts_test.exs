@@ -39,4 +39,97 @@ defmodule Bank.ReadStore.AccountsTest do
       assert {:error, :wallet_not_found} == Accounts.get_wallet_by_user_name("")
     end
   end
+
+  describe "list_operations/1" do
+    test "return all operations" do
+      wallet = insert(:wallet_projection)
+
+      1..5
+      |> Enum.each(fn _ ->
+        insert(:operation_projection, wallet_uuid: wallet.uuid)
+      end)
+
+      operations = Accounts.list_operations(wallet.uuid)
+
+      assert Enum.count(operations) == 5
+    end
+  end
+
+  describe "balance" do
+    setup do
+      wallet = insert(:wallet_projection)
+
+      1..3
+      |> Enum.each(fn x ->
+        date_time = Timex.to_datetime({{2018, 1, x}, {0, 0, 0}}, "Etc/UTC")
+
+        insert(:operation_projection,
+          wallet_uuid: wallet.uuid,
+          operation_date: date_time,
+          amount: 200.00 * x
+        )
+      end)
+
+      1..3
+      |> Enum.each(fn x ->
+        date_time = Timex.to_datetime({{2018, 1, x}, {0, 0, 0}}, "Etc/UTC")
+
+        insert(:operation_projection,
+          wallet_uuid: wallet.uuid,
+          operation_date: date_time,
+          amount: 100.00 * x,
+          type: :withdraw
+        )
+      end)
+
+      %{wallet_uuid: wallet.uuid}
+    end
+
+    test "return total balance", %{wallet_uuid: wallet_uuid} do
+      assert [%{credit: 600.0, debit: 1200.0, total: 600.0}] == Accounts.get_balance(wallet_uuid)
+    end
+
+    test "return balance per day", %{wallet_uuid: wallet_uuid} do
+      expected = [
+        %{
+          credit: 100.0,
+          day: " 01",
+          debit: 200.0,
+          month: " 01",
+          total: 100.0,
+          year: " 2018"
+        },
+        %{
+          credit: 200.0,
+          day: " 02",
+          debit: 400.0,
+          month: " 01",
+          total: 200.0,
+          year: " 2018"
+        },
+        %{
+          credit: 300.0,
+          day: " 03",
+          debit: 600.0,
+          month: " 01",
+          total: 300.0,
+          year: " 2018"
+        }
+      ]
+
+      assert expected == Accounts.get_balance_per_period(wallet_uuid, "day")
+    end
+
+    test "return balance per month", %{wallet_uuid: wallet_uuid} do
+      expected = [%{credit: 600.0, debit: 1.2e3, month: " 01", total: 600.0, year: " 2018"}]
+
+      assert expected == Accounts.get_balance_per_period(wallet_uuid, "month")
+    end
+
+    test "return balance per year", %{wallet_uuid: wallet_uuid} do
+      expected = [%{credit: 600.0, debit: 1.2e3, total: 600.0, year: " 2018"}]
+
+      assert expected == Accounts.get_balance_per_period(wallet_uuid, "year")
+    end
+  end
 end

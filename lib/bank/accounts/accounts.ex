@@ -11,6 +11,7 @@ defmodule Bank.Accounts do
   }
 
   alias Bank.Accounts.Projections.Wallet
+  alias Bank.Accounts.Query
   alias Bank.Router
 
   def open_wallet(attrs \\ %{}) do
@@ -80,6 +81,28 @@ defmodule Bank.Accounts do
     case Repo.get_by(Wallet, username: username) do
       nil -> {:error, :wallet_not_found}
       wallet -> {:ok, wallet}
+    end
+  end
+
+  def list_operations(wallet_uuid) do
+    Repo.all(Query.operations(wallet_uuid))
+  end
+
+  def get_balance(wallet_uuid) do
+    balance = Repo.one(Query.balance(wallet_uuid))
+
+    if balance.credit do
+      [balance]
+    else
+      []
+    end
+  end
+
+  def get_balance_per_period(wallet_uuid, period) do
+    case period do
+      "day" -> Query.balance_per_day(wallet_uuid)
+      "month" -> Query.balance_per_month(wallet_uuid)
+      "year" -> Query.balance_per_year(wallet_uuid)
     end
   end
 

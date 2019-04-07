@@ -5,7 +5,7 @@ defmodule Bank.Factory do
 
   alias Bank.Credentials.Projections.User
   alias Bank.Credentials.Commands.CreateUser
-  alias Bank.Accounts.Projections.Wallet
+  alias Bank.Accounts.Projections.{Wallet, Operation}
   alias Bank.Accounts.Commands.OpenWallet
   alias Bank.Accounts.Events.WalletOpened
 
@@ -45,6 +45,17 @@ defmodule Bank.Factory do
       user_uuid: UUID.uuid4(),
       username: sequence(:user, &"user#{&1}"),
       balance: 1000.00
+    }
+  end
+
+  def operation_projection_factory do
+    %Operation{
+      wallet_uuid: UUID.uuid4(),
+      type: :deposit,
+      amount: 1000.00,
+      from_user: "",
+      to_user: "",
+      operation_date: Timex.now()
     }
   end
 

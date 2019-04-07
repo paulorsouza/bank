@@ -5,8 +5,7 @@ defmodule BankWeb.WalletController do
 
   def show(conn, _params) do
     wallet = get_wallet(conn)
-    balance = Utils.Float.to_real(wallet.balance)
 
-    render(conn, "show.html", balance: balance)
+    render(conn, "show.html", balance: wallet.balance)
   end
 end
