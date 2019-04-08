@@ -48,7 +48,7 @@ defmodule Bank.MixProject do
       {:ex_machina, "~> 2.3", only: :test},
       {:comeonin, "~> 5.1"},
       {:pbkdf2_elixir, "~> 1.0"},
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:exconstructor, "~> 1.1"},
       {:vex, "~> 0.8"},
       {:commanded, "~> 0.18"},
@@ -57,7 +57,8 @@ defmodule Bank.MixProject do
       {:eventstore, "~> 0.16", runtime: Mix.env() != :test},
       {:timex, "~> 3.5"},
       {:bamboo, "~> 1.2"},
-      {:bamboo_smtp, "~> 1.6.0"}
+      {:bamboo_smtp, "~> 1.6.0"},
+      {:rollbax, "~> 0.10"}
     ]
   end
 
@@ -69,7 +70,6 @@ defmodule Bank.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "event_store.init": ["event_store.drop", "event_store.create", "event_store.init"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]

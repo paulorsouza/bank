@@ -1,6 +1,8 @@
+[![CircleCI](https://circleci.com/gh/paulorsouza/bank.svg?style=shield)](https://circleci.com/gh/paulorsouza/bank)
+
 # Bank
 
-[![CircleCI](https://circleci.com/gh/paulorsouza/bank.svg?style=svg)](https://circleci.com/gh/paulorsouza/bank)
+[Page](https://prs-bank.herokuapp.com/)
 
 A simple bank app implementing the CQRS/ES pattern using the [Commanded](https://github.com/slashdotdash/commanded) open source library.
 
@@ -26,7 +28,6 @@ A simple bank app implementing the CQRS/ES pattern using the [Commanded](https:/
   * Install Node.js dependencies with `cd assets && npm install`
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
   * Create the event store database `mix do event_store.create, event_store.init`
-  * You can run seed to initial data `mix run priv/repo/seeds.exs`
 
 ### Development
 
@@ -99,6 +100,10 @@ http://localhost:4000
     $ curl -X POST -d '{"username": "username", "email": "email@email.com", "password": "password"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/users
   ```
 
+  ```shell
+    $ curl -X POST -d '{"username": "username", "email": "email@email.com", "password": "password"}' -H "Accept: application/json" -H "Content-Type: application/json" https://prs-bank.herokuapp.com/api/v1/users
+  ```
+
 **Wallet**
 ----
    Get current balance
@@ -134,6 +139,10 @@ http://localhost:4000
 
   ```shell
     $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/wallets?credential=username&password=password
+  ```
+
+  ```shell
+    $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" https://prs-bank.herokuapp.com/api/v1/wallets?credential=username&password=password
   ```
 
 **Withdraw**
@@ -177,6 +186,10 @@ http://localhost:4000
 
   ```shell
     $ curl -X POST -d '{"credential": "username", "password": "password", "value": "200,22"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/withdraws
+  ```
+
+  ```shell
+    $ curl -X POST -d '{"credential": "username", "password": "password", "value": "200,22"}' -H "Accept: application/json" -H "Content-Type: application/json" https://prs-bank.herokuapp.com/api/v1/withdraws
   ```
 
 **Transfer**
@@ -224,6 +237,10 @@ http://localhost:4000
     $ curl -X POST -d '{"credential": "username", "password": "password", "to_user": "username", "value": "200,00"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/transfers
   ```
 
+  ```shell
+    $ curl -X POST -d '{"credential": "username", "password": "password", "to_user": "username", "value": "200,00"}' -H "Accept: application/json" -H "Content-Type: application/json" https://prs-bank.herokuapp.com/api/v1/transfers
+  ```
+
 **Balance**
 ----
    List all balances per periods
@@ -259,6 +276,10 @@ http://localhost:4000
 
   ```shell
     $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/balances?credential=username&password=password
+  ```
+
+  ```shell
+    $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" https://prs-bank.herokuapp.com/api/v1/balances?credential=username&password=password
   ```
 
 

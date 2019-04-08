@@ -9,6 +9,8 @@ config :bank, BankWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
+config :rollbax, enabled: :log
+
 # Configure your database
 config :bank, Bank.Repo,
   username: "postgres",

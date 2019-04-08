@@ -1,13 +1,11 @@
 defmodule Bank.Accounts.Commands.SendMoney do
   @moduledoc false
 
-  defstruct [
-    :transfer_uuid,
-    :wallet_uuid,
-    :to_wallet_uuid,
-    :amount,
-    :operation_date
-  ]
+  defstruct transfer_uuid: nil,
+            wallet_uuid: nil,
+            to_wallet_uuid: nil,
+            amount: nil,
+            operation_date: nil
 
   use ExConstructor
   use Vex.Struct
