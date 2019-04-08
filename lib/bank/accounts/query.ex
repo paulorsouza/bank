@@ -17,18 +17,18 @@ defmodule Bank.Accounts.Query do
       left_join: c in ^credits(),
       on: c.id == o.id,
       select: %{
-        debit: sum(d.amount),
-        credit: sum(c.amount),
-        total: sum(d.amount) - sum(c.amount)
+        debit: d.amount |> sum() |> coalesce(0),
+        credit: c.amount |> sum() |> coalesce(0),
+        total: (c.amount |> sum() |> coalesce(0)) - (d.amount |> sum() |> coalesce(0))
       }
   end
 
   def debits do
-    from o in Operation, where: o.type in [0, 2]
+    from o in Operation, where: o.type in [1, 2]
   end
 
   def credits do
-    from o in Operation, where: o.type in [1, 3]
+    from o in Operation, where: o.type in [0, 3]
   end
 
   def balance_per_day(wallet_uuid) do
@@ -40,12 +40,12 @@ defmodule Bank.Accounts.Query do
         select to_char(date_part('day', o.operation_date), '00') as day,
                to_char(date_part('month', o.operation_date), '00') as month,
                to_char(date_part('year', o.operation_date), '0000') as year,
-               sum(debits.amount) as d,
-               sum(credits.amount) as c,
-               sum(debits.amount) - sum(credits.amount) as t
+               coalesce(sum(debits.amount), 0) as d,
+               coalesce(sum(credits.amount), 0) as c,
+               coalesce(sum(credits.amount), 0) - coalesce(sum(debits.amount), 0) as t
         from operations o
-        left join operations debits on debits.id = o.id and debits.type in (0,2)
-        left join operations credits on credits.id = o.id and credits.type in (1,3)
+        left join operations debits on debits.id = o.id and debits.type in (1,2)
+        left join operations credits on credits.id = o.id and credits.type in (0,3)
         where o.wallet_uuid = $1
         group by day, month, year
         """,
@@ -65,12 +65,12 @@ defmodule Bank.Accounts.Query do
         """
         select to_char(date_part('month', o.operation_date), '00') as month,
                to_char(date_part('year', o.operation_date), '0000') as year,
-               sum(debits.amount) as d,
-               sum(credits.amount) as c,
-               sum(debits.amount) - sum(credits.amount) as t
+               coalesce(sum(debits.amount), 0) as d,
+               coalesce(sum(credits.amount), 0) as c,
+               coalesce(sum(credits.amount), 0) - coalesce(sum(debits.amount), 0) as t
         from operations o
-        left join operations debits on debits.id = o.id and debits.type in (0,2)
-        left join operations credits on credits.id = o.id and credits.type in (1,3)
+        left join operations debits on debits.id = o.id and debits.type in (1,2)
+        left join operations credits on credits.id = o.id and credits.type in (0,3)
         where o.wallet_uuid = $1
         group by month, year
         """,
@@ -89,12 +89,12 @@ defmodule Bank.Accounts.Query do
       query(
         """
         select to_char(date_part('year', o.operation_date), '0000') as year,
-               sum(debits.amount) as d,
-               sum(credits.amount) as c,
-               sum(debits.amount) - sum(credits.amount) as t
+               coalesce(sum(debits.amount), 0) as d,
+               coalesce(sum(credits.amount), 0) as c,
+               coalesce(sum(credits.amount), 0) - coalesce(sum(debits.amount), 0) as t
         from operations o
-        left join operations debits on debits.id = o.id and debits.type in (0,2)
-        left join operations credits on credits.id = o.id and credits.type in (1,3)
+        left join operations debits on debits.id = o.id and debits.type in (1,2)
+        left join operations credits on credits.id = o.id and credits.type in (0,3)
         where o.wallet_uuid = $1
         group by year
         """,

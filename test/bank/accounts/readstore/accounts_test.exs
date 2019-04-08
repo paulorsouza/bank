@@ -86,31 +86,31 @@ defmodule Bank.ReadStore.AccountsTest do
     end
 
     test "return total balance", %{wallet_uuid: wallet_uuid} do
-      assert [%{credit: 600.0, debit: 1200.0, total: 600.0}] == Accounts.get_balance(wallet_uuid)
+      assert [%{credit: 1200.0, debit: 600.0, total: 600.0}] == Accounts.get_balance(wallet_uuid)
     end
 
     test "return balance per day", %{wallet_uuid: wallet_uuid} do
       expected = [
         %{
-          credit: 100.0,
+          credit: 200.0,
           day: " 01",
-          debit: 200.0,
+          debit: 100.0,
           month: " 01",
           total: 100.0,
           year: " 2018"
         },
         %{
-          credit: 200.0,
+          credit: 400.0,
           day: " 02",
-          debit: 400.0,
+          debit: 200.0,
           month: " 01",
           total: 200.0,
           year: " 2018"
         },
         %{
-          credit: 300.0,
+          credit: 600.0,
           day: " 03",
-          debit: 600.0,
+          debit: 300.0,
           month: " 01",
           total: 300.0,
           year: " 2018"
@@ -121,15 +121,25 @@ defmodule Bank.ReadStore.AccountsTest do
     end
 
     test "return balance per month", %{wallet_uuid: wallet_uuid} do
-      expected = [%{credit: 600.0, debit: 1.2e3, month: " 01", total: 600.0, year: " 2018"}]
+      expected = [%{credit: 1200.0, debit: 600.0, month: " 01", total: 600.0, year: " 2018"}]
 
       assert expected == Accounts.get_balance_per_period(wallet_uuid, "month")
     end
 
     test "return balance per year", %{wallet_uuid: wallet_uuid} do
-      expected = [%{credit: 600.0, debit: 1.2e3, total: 600.0, year: " 2018"}]
+      expected = [%{credit: 1200.0, debit: 600.0, total: 600.0, year: " 2018"}]
 
       assert expected == Accounts.get_balance_per_period(wallet_uuid, "year")
+    end
+
+    test "can not break when you have only one operation" do
+      wallet = insert(:wallet_projection)
+      insert(:operation_projection)
+
+      assert is_list(Accounts.get_balance(wallet.uuid))
+      assert is_list(Accounts.get_balance_per_period(wallet.uuid, "day"))
+      assert is_list(Accounts.get_balance_per_period(wallet.uuid, "month"))
+      assert is_list(Accounts.get_balance_per_period(wallet.uuid, "year"))
     end
   end
 end
