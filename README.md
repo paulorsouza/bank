@@ -160,7 +160,7 @@ http://localhost:4000
 
   ```javascript
      fetch("http://localhost:4000/api/v1/withdraws", {
-        method: "GET",
+        method: "POST",
         headers: {
            "Accept": "application/json",
            'Content-Type': 'application/json'
@@ -204,7 +204,7 @@ http://localhost:4000
 
   ```javascript
      fetch("http://localhost:4000/api/v1/transfers", {
-        method: "GET",
+        method: "POST",
         headers: {
            "Accept": "application/json",
            'Content-Type': 'application/json'
@@ -220,6 +220,43 @@ http://localhost:4000
 
   ```shell
     $ curl -X POST -d '{"credential": "username", "password": "password", "to_user": "username", "value": "200,00"}' -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/transfers
+  ```
+
+**Balance**
+----
+   List all balances per periods
+
+* **URL**
+
+  api/v1/balances
+
+* **HTTP Verb:**
+  
+  `GET`
+
+* **Payload**
+
+  * credential :string *required* (username or email)
+  * password :string *required*
+  
+* **Return**   
+  
+  * balance per day, month, year and total
+
+* **Sample:**
+
+  ```javascript
+     fetch("http://localhost:4000/api/v1/balances?credential=username&password=password", {
+        method: "GET",
+        headers: {
+           "Accept": "application/json",
+           'Content-Type': 'application/json'
+        }
+     })
+  ```
+
+  ```shell
+    $ curl -X GET -H "Accept: application/json" -H "Content-Type: application/json" http://localhost:4000/api/v1/balances?credential=username&password=password
   ```
 
 

@@ -7,7 +7,7 @@ defmodule BankWeb.Api.TransferControllerTest do
 
   @moduletag :api
 
-  describe "wallet" do
+  describe "transfer" do
     test "should return wallet with balance", %{conn: conn} do
       create_user = build(:user)
       another_user = build(:user)
