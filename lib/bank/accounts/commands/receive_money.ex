@@ -12,8 +12,6 @@ defmodule Bank.Accounts.Commands.ReceiveMoney do
   use ExConstructor
   use Vex.Struct
 
-  alias __MODULE__
-
   validates(:wallet_uuid, uuid: true)
   validates(:from_wallet_uuid, uuid: true)
   validates(:amount, float: true)

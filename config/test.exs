@@ -22,3 +22,6 @@ config :commanded,
 
 config :commanded, Commanded.EventStore.Adapters.InMemory,
   serializer: Commanded.Serialization.JsonSerializer
+
+# Bamboo
+config :bank, Bank.Mailer, adapter: Bamboo.TestAdapter

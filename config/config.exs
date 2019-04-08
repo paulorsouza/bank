@@ -41,3 +41,14 @@ config :vex,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+# Bamboo
+config :bank, Bank.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "smtp.gmail.com",
+  port: 587,
+  username: "mailertabajara@gmail.com",
+  password: "23tNGp8uNEYWxYh",
+  tls: :if_available,
+  ssl: false,
+  retries: 1

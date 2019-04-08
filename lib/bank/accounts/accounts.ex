@@ -12,6 +12,8 @@ defmodule Bank.Accounts do
 
   alias Bank.Accounts.Projections.Wallet
   alias Bank.Accounts.Query
+  alias Bank.Accounts.Email
+  alias Bank.Mailer
   alias Bank.Router
 
   def open_wallet(attrs \\ %{}) do
@@ -36,6 +38,7 @@ defmodule Bank.Accounts do
       )
 
     with :ok <- Router.dispatch(command, consistency: :strong) do
+      send_withdraw_email(wallet_uuid, amount)
       get(Wallet, wallet_uuid)
     end
   end
@@ -84,7 +87,7 @@ defmodule Bank.Accounts do
     end
   end
 
-  def get_wallet_by_user_name(username) do
+  def get_wallet_by_user_name(_username) do
     {:error, :wallet_not_found}
   end
 
@@ -115,5 +118,16 @@ defmodule Bank.Accounts do
       nil -> {:error, :not_found}
       projection -> {:ok, projection}
     end
+  end
+
+  defp send_withdraw_email(uuid, amount) do
+    wallet = get_wallet(uuid)
+    user = Bank.Credentials.get_user_by_username(wallet.username)
+
+    Task.async(fn ->
+      user
+      |> Email.withdraw(amount, wallet.balance)
+      |> Mailer.deliver_now()
+    end)
   end
 end

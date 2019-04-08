@@ -5,7 +5,6 @@ defmodule BankWeb.Api.BalanceControllerTest do
   alias Bank.Credentials
   alias Bank.Accounts
   alias Bank.Credentials.Projections.User
-  alias Bank.Accounts.Projections.Wallet
 
   @moduletag :api
 

@@ -55,7 +55,9 @@ defmodule Bank.MixProject do
       {:commanded_ecto_projections, "~> 0.8"},
       {:commanded_eventstore_adapter, "~> 0.5", runtime: Mix.env() != :test},
       {:eventstore, "~> 0.16", runtime: Mix.env() != :test},
-      {:timex, "~> 3.5"}
+      {:timex, "~> 3.5"},
+      {:bamboo, "~> 1.2"},
+      {:bamboo_smtp, "~> 1.6.0"}
     ]
   end
 

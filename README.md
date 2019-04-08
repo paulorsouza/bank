@@ -1,5 +1,7 @@
 # Bank
 
+[![CircleCI](https://circleci.com/gh/paulorsouza/bank.svg?style=svg)](https://circleci.com/gh/paulorsouza/bank)
+
 A simple bank app implementing the CQRS/ES pattern using the [Commanded](https://github.com/slashdotdash/commanded) open source library.
 
 ## Getting Started

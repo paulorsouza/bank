@@ -12,8 +12,6 @@ defmodule Bank.Accounts.Commands.SendMoney do
   use ExConstructor
   use Vex.Struct
 
-  alias __MODULE__
-
   validates(:transfer_uuid, uuid: true)
   validates(:wallet_uuid, uuid: true)
   validates(:to_wallet_uuid, uuid: true)
