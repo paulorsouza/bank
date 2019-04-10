@@ -45,4 +45,22 @@ defmodule BankWeb.Router do
     resources "/transfers", Api.TransferController, only: [:create], as: :transfer_api
     resources "/balances", Api.BalanceController, only: [:index], as: :balance_api
   end
+
+  # Rollbax
+  # https://hexdocs.pm/rollbax/using-rollbax-in-plug-based-applications.html
+  defp handle_errors(conn, %{kind: kind, reason: reason, stack: stacktrace}) do
+    conn = Plug.Conn.fetch_query_params(conn)
+
+    conn_data = %{
+      "request" => %{
+        "url" => "#{conn.scheme}://#{conn.host}:#{conn.port}#{conn.request_path}",
+        "user_ip" => conn.remote_ip |> Tuple.to_list() |> Enum.join("."),
+        "headers" => Enum.into(conn.req_headers, %{}),
+        "params" => conn.params,
+        "method" => conn.method
+      }
+    }
+
+    Rollbax.report(kind, reason, stacktrace, %{}, conn_data)
+  end
 end
